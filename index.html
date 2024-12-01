@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Универсальный Конвертер Валют</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0/dist/css/select2.min.css">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -55,16 +54,6 @@
             background: #45a049;
         }
 
-        .select2-container .select2-selection--single {
-            background: #444;
-            border: none;
-            color: #fff;
-        }
-
-        .select2-container--default .select2-selection--single .select2-selection__arrow b {
-            border-color: #fff transparent transparent transparent;
-        }
-
         .result {
             margin-top: 20px;
         }
@@ -88,19 +77,19 @@
     <div class="container">
         <h1>Универсальный Конвертер Валют</h1>
         <input type="number" id="amount" placeholder="Введите сумму">
-        <select id="fromCurrency" class="currency-select">
-            <option value="USD" data-icon="https://flagcdn.com/w40/us.png">Доллары США (USD)</option>
-            <option value="UAH" data-icon="https://flagcdn.com/w40/ua.png">Украинские гривны (UAH)</option>
-            <option value="RUB" data-icon="https://flagcdn.com/w40/ru.png">Российские рубли (RUB)</option>
-            <option value="GBP" data-icon="https://flagcdn.com/w40/gb.png">Британские фунты (GBP)</option>
-            <option value="AED" data-icon="https://flagcdn.com/w40/ae.png">Дирхамы ОАЭ (AED)</option>
+        <select id="fromCurrency">
+            <option value="USD">🇺🇸 Доллары США (USD)</option>
+            <option value="UAH">🇺🇦 Украинские гривны (UAH)</option>
+            <option value="RUB">🇷🇺 Российские рубли (RUB)</option>
+            <option value="GBP">🇬🇧 Британские фунты (GBP)</option>
+            <option value="AED">🇦🇪 Дирхамы ОАЭ (AED)</option>
         </select>
-        <select id="toCurrency" class="currency-select">
-            <option value="USD" data-icon="https://flagcdn.com/w40/us.png">Доллары США (USD)</option>
-            <option value="UAH" data-icon="https://flagcdn.com/w40/ua.png">Украинские гривны (UAH)</option>
-            <option value="RUB" data-icon="https://flagcdn.com/w40/ru.png">Российские рубли (RUB)</option>
-            <option value="GBP" data-icon="https://flagcdn.com/w40/gb.png">Британские фунты (GBP)</option>
-            <option value="AED" data-icon="https://flagcdn.com/w40/ae.png">Дирхамы ОАЭ (AED)</option>
+        <select id="toCurrency">
+            <option value="USD">🇺🇸 Доллары США (USD)</option>
+            <option value="UAH">🇺🇦 Украинские гривны (UAH)</option>
+            <option value="RUB">🇷🇺 Российские рубли (RUB)</option>
+            <option value="GBP">🇬🇧 Британские фунты (GBP)</option>
+            <option value="AED">🇦🇪 Дирхамы ОАЭ (AED)</option>
         </select>
         <input type="number" id="commission" placeholder="Процент комиссии">
         <button onclick="convertCurrency()">Рассчитать</button>
@@ -114,27 +103,7 @@
         Второй телефон: <a href="tel:+971527429306">+971 527 429 306</a>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.4/dist/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0/dist/js/select2.min.js"></script>
     <script>
-        $(document).ready(function () {
-            $('.currency-select').select2({
-                templateResult: formatState,
-                templateSelection: formatState
-            });
-
-            function formatState(state) {
-                if (!state.id) {
-                    return state.text;
-                }
-                var baseUrl = state.element.dataset.icon;
-                var $state = $(
-                    '<span><img src="' + baseUrl + '" class="img-flag" style="width: 20px; margin-right: 10px;" />' + state.text + '</span>'
-                );
-                return $state;
-            }
-        });
-
         async function convertCurrency() {
             const amount = parseFloat(document.getElementById('amount').value);
             const fromCurrency = document.getElementById('fromCurrency').value;
