@@ -5,19 +5,34 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Универсальный конвертер валют</title>
     <style>
+        :root {
+            --background-color: #f4f4f9;
+            --text-color: #333;
+            --button-color: #4CAF50;
+            --card-background: #ffffff;
+        }
+
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f4f9;
-            color: #333;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            margin: 0;
+        }
+
+        body.dark {
+            --background-color: #333;
+            --text-color: #f4f4f9;
+            --button-color: #66bb6a;
+            --card-background: #444;
         }
 
         .converter {
-            background-color: #fff;
+            background-color: var(--card-background);
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -26,7 +41,7 @@
         }
 
         h1 {
-            color: #4CAF50;
+            color: var(--button-color);
             text-align: center;
         }
 
@@ -47,41 +62,48 @@
             border: 1px solid #ddd;
         }
 
-        .flag-option {
-            display: flex;
-            align-items: center;
-        }
-
-        .flag-option img {
-            width: 20px;
-            height: 15px;
-            margin-right: 8px;
-        }
-
         button {
-            background-color: #4CAF50;
+            background-color: var(--button-color);
             color: white;
             cursor: pointer;
         }
 
         button:hover {
-            background-color: #45a049;
+            opacity: 0.9;
         }
 
         footer {
             margin-top: 20px;
             text-align: center;
             font-size: 14px;
-            color: #666;
+            color: var(--text-color);
         }
 
         footer a {
-            color: #4CAF50;
+            color: var(--button-color);
             text-decoration: none;
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: var(--button-color);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 10px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .theme-toggle:hover {
+            opacity: 0.9;
         }
     </style>
 </head>
 <body>
+    <button class="theme-toggle" onclick="toggleTheme()">Переключить тему</button>
     <div class="converter">
         <h1>Универсальный конвертер валют</h1>
         <form id="converter-form" onsubmit="event.preventDefault(); calculate();">
@@ -90,40 +112,20 @@
 
             <label for="fromCurrency">Из валюты:</label>
             <select id="fromCurrency">
-                <option value="USD" class="flag-option">
-                    <img src="https://flagcdn.com/w320/us.png" alt="US Flag"> Доллары США (USD)
-                </option>
-                <option value="UAH" class="flag-option">
-                    <img src="https://flagcdn.com/w320/ua.png" alt="UA Flag"> Украинские гривны (UAH)
-                </option>
-                <option value="RUB" class="flag-option">
-                    <img src="https://flagcdn.com/w320/ru.png" alt="RU Flag"> Российские рубли (RUB)
-                </option>
-                <option value="GBP" class="flag-option">
-                    <img src="https://flagcdn.com/w320/gb.png" alt="GB Flag"> Британские фунты (GBP)
-                </option>
-                <option value="AED" class="flag-option">
-                    <img src="https://flagcdn.com/w320/ae.png" alt="AE Flag"> Дирхамы ОАЭ (AED)
-                </option>
+                <option value="USD">Доллары США (USD)</option>
+                <option value="UAH">Украинские гривны (UAH)</option>
+                <option value="RUB">Российские рубли (RUB)</option>
+                <option value="GBP">Британские фунты (GBP)</option>
+                <option value="AED">Дирхамы ОАЭ (AED)</option>
             </select>
 
             <label for="toCurrency">В валюту:</label>
             <select id="toCurrency">
-                <option value="USD" class="flag-option">
-                    <img src="https://flagcdn.com/w320/us.png" alt="US Flag"> Доллары США (USD)
-                </option>
-                <option value="UAH" class="flag-option">
-                    <img src="https://flagcdn.com/w320/ua.png" alt="UA Flag"> Украинские гривны (UAH)
-                </option>
-                <option value="RUB" class="flag-option">
-                    <img src="https://flagcdn.com/w320/ru.png" alt="RU Flag"> Российские рубли (RUB)
-                </option>
-                <option value="GBP" class="flag-option">
-                    <img src="https://flagcdn.com/w320/gb.png" alt="GB Flag"> Британские фунты (GBP)
-                </option>
-                <option value="AED" class="flag-option">
-                    <img src="https://flagcdn.com/w320/ae.png" alt="AE Flag"> Дирхамы ОАЭ (AED)
-                </option>
+                <option value="USD">Доллары США (USD)</option>
+                <option value="UAH">Украинские гривны (UAH)</option>
+                <option value="RUB">Российские рубли (RUB)</option>
+                <option value="GBP">Британские фунты (GBP)</option>
+                <option value="AED">Дирхамы ОАЭ (AED)</option>
             </select>
 
             <label for="commission">Процент комиссии:</label>
@@ -138,5 +140,33 @@
     <footer>
         Разработано с ❤️ <a href="https://github.com/ihordubairealestate" target="_blank">Ihor Dubai Real Estate</a>
     </footer>
+    <script>
+        function toggleTheme() {
+            document.body.classList.toggle('dark');
+        }
+
+        function toggleCommission() {
+            const commissionInput = document.getElementById("commission");
+            commissionInput.disabled = !document.getElementById("includeCommission").checked;
+            if (!commissionInput.disabled) {
+                commissionInput.value = "15";
+            } else {
+                commissionInput.value = "0";
+            }
+        }
+
+        function calculate() {
+            const amount = parseFloat(document.getElementById('amount').value);
+            const fromCurrency = document.getElementById('fromCurrency').value;
+            const toCurrency = document.getElementById('toCurrency').value;
+
+            if (isNaN(amount) || amount <= 0) {
+                alert("Введите корректную сумму.");
+                return;
+            }
+
+            alert(`Конвертация ${amount} ${fromCurrency} в ${toCurrency}`);
+        }
+    </script>
 </body>
 </html>
