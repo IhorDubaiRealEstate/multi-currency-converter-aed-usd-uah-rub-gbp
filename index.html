@@ -181,27 +181,22 @@
         };
 
         function translateUI(language) {
-            document.getElementById("title").textContent = translations[language].title;
-            document.getElementById("convertButton").textContent = translations[language].calculate;
-            document.getElementById("amount").placeholder = translations[language].enterAmount;
-            document.getElementById("commission").placeholder = translations[language].commissionPlaceholder;
-        }
-
-        function formatNumber(value, language) {
-            const lang = translations[language];
-            if (value >= 1_000_000) {
-                return (value / 1_000_000).toFixed(2) + " " + lang.million;
-            } else if (value >= 1_000) {
-                return (value / 1_000).toFixed(2) + " " + lang.thousand;
-            } else {
-                return value.toFixed(2);
-            }
+            const translation = translations[language];
+            document.getElementById("title").textContent = translation.title;
+            document.getElementById("convertButton").textContent = translation.calculate;
+            document.getElementById("amount").placeholder = translation.enterAmount;
+            document.getElementById("commission").placeholder = translation.commissionPlaceholder;
         }
 
         async function fetchRates() {
-            const response = await fetch("https://v6.exchangerate-api.com/v6/020c6e77213ba847f6eaaf32/latest/USD");
-            const data = await response.json();
-            return data.conversion_rates;
+            try {
+                const response = await fetch("https://v6.exchangerate-api.com/v6/020c6e77213ba847f6eaaf32/latest/USD");
+                if (!response.ok) throw new Error("Failed to fetch rates");
+                return (await response.json()).conversion_rates;
+            } catch (err) {
+                console.error(err);
+                return null;
+            }
         }
 
         async function convertCurrency() {
@@ -212,4 +207,37 @@
             const selectedLanguage = document.getElementById("languageSelector").value;
 
             if (isNaN(amount) || amount <= 0) {
-                document.getElementById("result").textContent = translations[selected
+                document.getElementById("result").textContent = translations[selectedLanguage].enterAmount;
+                return;
+            }
+
+            const rates = await fetchRates();
+            if (!rates) {
+                document.getElementById("result").textContent = "Error fetching exchange rates.";
+                return;
+            }
+
+            const baseAmount = amount / rates[fromCurrency];
+            const convertedAmount = baseAmount * rates[toCurrency];
+            const commission = (commissionRate / 100) * convertedAmount;
+            const totalAmount = convertedAmount - commission;
+
+            const formattedOriginal = formatNumber(amount, selectedLanguage);
+            const formattedConverted = formatNumber(convertedAmount, selectedLanguage);
+            const formattedTotal = formatNumber(totalAmount, selectedLanguage);
+
+            document.getElementById("result").innerHTML = `
+                ${translations[selectedLanguage].originalAmount}: ${formattedOriginal} ${fromCurrency}<br>
+                ${translations[selectedLanguage].convertedAmount}: ${formattedConverted} ${toCurrency}<br>
+                ${translations[selectedLanguage].totalAmount}: ${formattedTotal} ${toCurrency}
+            `;
+        }
+
+        document.getElementById("convertButton").addEventListener("click", convertCurrency);
+        document.getElementById("languageSelector").addEventListener("change", (event) => {
+            const selectedLanguage = event.target.value;
+            translateUI(selectedLanguage);
+        });
+    </script>
+</body>
+</html>
