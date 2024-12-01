@@ -12,6 +12,13 @@
             --card-background: #444;
         }
 
+        body.light {
+            --background-color: #f4f4f9;
+            --text-color: #333;
+            --button-color: #4CAF50;
+            --card-background: #ffffff;
+        }
+
         body {
             font-family: Arial, sans-serif;
             background-color: var(--background-color);
@@ -22,6 +29,7 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
+            transition: all 0.3s ease;
         }
 
         .converter {
@@ -67,6 +75,26 @@
             opacity: 0.9;
         }
 
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: var(--button-color);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            padding: 12px 15px;
+            font-size: 18px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .theme-toggle:hover {
+            background-color: #4caf50;
+            transform: scale(1.1);
+        }
+
         footer {
             margin-top: 20px;
             text-align: center;
@@ -85,6 +113,7 @@
     </style>
 </head>
 <body>
+    <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
     <div class="converter">
         <h1>Универсальный конвертер валют</h1>
         <form id="converter-form" onsubmit="event.preventDefault(); calculate();">
@@ -92,4 +121,19 @@
             <input type="number" id="amount" placeholder="Введите сумму" required>
 
             <label for="fromCurrency">Из валюты:</label>
-            <select id="from
+            <select id="fromCurrency">
+                <option value="USD">Доллары США (USD)</option>
+                <option value="UAH">Украинские гривны (UAH)</option>
+                <option value="RUB">Российские рубли (RUB)</option>
+                <option value="GBP">Британские фунты (GBP)</option>
+                <option value="AED">Дирхамы ОАЭ (AED)</option>
+            </select>
+
+            <label for="toCurrency">В валюту:</label>
+            <select id="toCurrency">
+                <option value="USD">Доллары США (USD)</option>
+                <option value="UAH">Украинские гривны (UAH)</option>
+                <option value="RUB">Российские рубли (RUB)</option>
+                <option value="GBP">Британские фунты (GBP)</option>
+                <option value="AED">Дирхамы ОАЭ (AED)</option>
+            </
