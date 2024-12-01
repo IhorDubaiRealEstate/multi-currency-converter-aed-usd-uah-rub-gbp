@@ -10,6 +10,8 @@
             --text-color: #f4f4f9;
             --button-color: #66bb6a;
             --card-background: #444;
+            --input-background: #555;
+            --input-text-color: #f4f4f9;
         }
 
         body.light {
@@ -17,6 +19,8 @@
             --text-color: #333;
             --button-color: #4CAF50;
             --card-background: #ffffff;
+            --input-background: #fff;
+            --input-text-color: #333;
         }
 
         body {
@@ -60,15 +64,16 @@
             margin-top: 10px;
             font-size: 16px;
             border-radius: 4px;
-            border: 1px solid #555;
-            background-color: #555;
-            color: var(--text-color);
+            border: 1px solid #777;
+            background-color: var(--input-background);
+            color: var(--input-text-color);
         }
 
         button {
             background-color: var(--button-color);
             color: white;
             cursor: pointer;
+            border: none;
         }
 
         button:hover {
@@ -136,4 +141,47 @@
                 <option value="RUB">Российские рубли (RUB)</option>
                 <option value="GBP">Британские фунты (GBP)</option>
                 <option value="AED">Дирхамы ОАЭ (AED)</option>
-            </
+            </select>
+
+            <label for="commission">Процент комиссии:</label>
+            <input type="number" id="commission" placeholder="Введите % комиссии" value="0" disabled>
+            <label>
+                <input type="checkbox" id="includeCommission" onclick="toggleCommission()"> Включить комиссию
+            </label>
+
+            <button type="submit">Рассчитать</button>
+        </form>
+    </div>
+    <footer>
+        Разработано с ❤️ <a href="https://github.com/ihordubairealestate" target="_blank">Ihor Dubai Real Estate</a>
+    </footer>
+    <script>
+        function toggleTheme() {
+            document.body.classList.toggle('light');
+        }
+
+        function toggleCommission() {
+            const commissionInput = document.getElementById("commission");
+            commissionInput.disabled = !document.getElementById("includeCommission").checked;
+            if (!commissionInput.disabled) {
+                commissionInput.value = "15";
+            } else {
+                commissionInput.value = "0";
+            }
+        }
+
+        function calculate() {
+            const amount = parseFloat(document.getElementById('amount').value);
+            const fromCurrency = document.getElementById('fromCurrency').value;
+            const toCurrency = document.getElementById('toCurrency').value;
+
+            if (isNaN(amount) || amount <= 0) {
+                alert("Введите корректную сумму.");
+                return;
+            }
+
+            alert(`Конвертация ${amount} ${fromCurrency} в ${toCurrency}`);
+        }
+    </script>
+</body>
+</html>
