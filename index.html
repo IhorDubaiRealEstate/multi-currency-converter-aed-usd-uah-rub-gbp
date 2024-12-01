@@ -106,17 +106,28 @@
     <div class="container">
         <h1 id="title">Универсальный Конвертер Валют</h1>
         <input type="number" id="amount" placeholder="Введите сумму" />
-        <select id="fromCurrency"></select>
-        <select id="toCurrency"></select>
+        <select id="fromCurrency">
+            <option value="RUB" selected>🇷🇺 Российские рубли (RUB)</option>
+            <option value="USD">🇺🇸 Доллары США (USD)</option>
+            <option value="UAH">🇺🇦 Українські гривні (UAH)</option>
+            <option value="GBP">🇬🇧 Британські фунти (GBP)</option>
+            <option value="AED">🇦🇪 Дірхами ОАЕ (AED)</option>
+        </select>
+        <select id="toCurrency">
+            <option value="AED" selected>🇦🇪 Дірхами ОАЕ (AED)</option>
+            <option value="USD">🇺🇸 Доллары США (USD)</option>
+            <option value="UAH">🇺🇦 Українські гривні (UAH)</option>
+            <option value="RUB">🇷🇺 Российские рубли (RUB)</option>
+            <option value="GBP">🇬🇧 Британські фунти (GBP)</option>
+        </select>
         <input type="number" id="commission" placeholder="Процент комиссии" value="0" />
         <button id="convertButton">Рассчитать</button>
         <div id="result" style="margin-top: 15px;"></div>
         <div class="footer">
-            <span id="developedBy">Разработано с ❤️ Ihor Dubai Real Estate</span><br>
-            <span id="contact">Свяжитесь со мной:</span><br>
-            <span>Instagram: <a href="https://instagram.com/ihorestatelife" target="_blank">@ihorestatelife</a></span><br>
-            <span id="phoneLabel">Телефон:</span> <a href="tel:+971543031920">+971 54 303 19 20</a><br>
-            <span id="secondPhoneLabel">Второй телефон:</span> <a href="tel:+971527429306">+971 52 742 93 06</a>
+            Разработано с ❤️ Ihor Dubai Real Estate<br>
+            Свяжитесь со мной:<br>
+            Instagram: <a href="https://instagram.com/ihorestatelife" target="_blank">@ihorestatelife</a><br>
+            Телефон: <a href="tel:+971527429306">+971 52 742 93 06</a>
         </div>
     </div>
 
@@ -130,17 +141,8 @@
                 totalAmount: "Итоговая сумма",
                 enterAmount: "Введите сумму",
                 commissionPlaceholder: "Процент комиссии",
-                developedBy: "Разработано с ❤️ Ihor Dubai Real Estate",
-                contact: "Свяжитесь со мной:",
-                phoneLabel: "Телефон:",
-                secondPhoneLabel: "Второй телефон:",
-                currencies: {
-                    RUB: "🇷🇺 Российские рубли (RUB)",
-                    USD: "🇺🇸 Доллары США (USD)",
-                    UAH: "🇺🇦 Украинские гривны (UAH)",
-                    GBP: "🇬🇧 Британские фунты (GBP)",
-                    AED: "🇦🇪 Дирхамы ОАЭ (AED)"
-                }
+                million: "млн",
+                thousand: "тыс"
             },
             en: {
                 title: "Universal Currency Converter",
@@ -150,17 +152,8 @@
                 totalAmount: "Total Amount",
                 enterAmount: "Enter Amount",
                 commissionPlaceholder: "Commission Percentage",
-                developedBy: "Developed with ❤️ by Ihor Dubai Real Estate",
-                contact: "Contact me:",
-                phoneLabel: "Phone:",
-                secondPhoneLabel: "Second phone:",
-                currencies: {
-                    RUB: "🇷🇺 Russian Rubles (RUB)",
-                    USD: "🇺🇸 US Dollars (USD)",
-                    UAH: "🇺🇦 Ukrainian Hryvnias (UAH)",
-                    GBP: "🇬🇧 British Pounds (GBP)",
-                    AED: "🇦🇪 UAE Dirhams (AED)"
-                }
+                million: "M",
+                thousand: "K"
             },
             ar: {
                 title: "محول العملات العالمي",
@@ -170,17 +163,8 @@
                 totalAmount: "المبلغ الإجمالي",
                 enterAmount: "أدخل المبلغ",
                 commissionPlaceholder: "نسبة العمولة",
-                developedBy: "تم التطوير مع ❤️ بواسطة Ihor Dubai Real Estate",
-                contact: "تواصل معي:",
-                phoneLabel: "الهاتف:",
-                secondPhoneLabel: "الهاتف الثاني:",
-                currencies: {
-                    RUB: "🇷🇺 روبل روسي (RUB)",
-                    USD: "🇺🇸 دولار أمريكي (USD)",
-                    UAH: "🇺🇦 هريفنيا أوكراني (UAH)",
-                    GBP: "🇬🇧 جنيه إسترليني (GBP)",
-                    AED: "🇦🇪 درهم إماراتي (AED)"
-                }
+                million: "مليون",
+                thousand: "ألف"
             },
             ua: {
                 title: "Універсальний Конвертер Валют",
@@ -190,54 +174,61 @@
                 totalAmount: "Загальна сума",
                 enterAmount: "Введіть суму",
                 commissionPlaceholder: "Відсоток комісії",
-                developedBy: "Розроблено з ❤️ Ihor Dubai Real Estate",
-                contact: "Зв'яжіться зі мною:",
-                phoneLabel: "Телефон:",
-                secondPhoneLabel: "Другий телефон:",
-                currencies: {
-                    RUB: "🇷🇺 Російський рубль (RUB)",
-                    USD: "🇺🇸 Долар США (USD)",
-                    UAH: "🇺🇦 Українська гривня (UAH)",
-                    GBP: "🇬🇧 Британський фунт (GBP)",
-                    AED: "🇦🇪 Дирхам ОАЕ (AED)"
-                }
+                million: "млн",
+                thousand: "тис"
             }
         };
 
-        const languageSelector = document.getElementById("languageSelector");
-        const fromCurrency = document.getElementById("fromCurrency");
-        const toCurrency = document.getElementById("toCurrency");
-
         function translateUI(language) {
-            const lang = translations[language];
-            document.getElementById("title").textContent = lang.title;
-            document.getElementById("convertButton").textContent = lang.calculate;
-            document.getElementById("amount").placeholder = lang.enterAmount;
-            document.getElementById("commission").placeholder = lang.commissionPlaceholder;
-            document.getElementById("developedBy").textContent = lang.developedBy;
-            document.getElementById("contact").textContent = lang.contact;
-            document.getElementById("phoneLabel").textContent = lang.phoneLabel;
-            document.getElementById("secondPhoneLabel").textContent = lang.secondPhoneLabel;
-            updateCurrencies(language);
+            document.getElementById("title").textContent = translations[language].title;
+            document.getElementById("convertButton").textContent = translations[language].calculate;
+            document.getElementById("amount").placeholder = translations[language].enterAmount;
+            document.getElementById("commission").placeholder = translations[language].commissionPlaceholder;
+            document.querySelectorAll('#fromCurrency option, #toCurrency option').forEach(option => {
+                const value = option.value;
+                if (value) {
+                    const flag = option.textContent.split(" ")[0]; // Keep flag
+                    option.textContent = `${flag} ${translations[language][value] || option.textContent}`;
+                }
+            });
         }
 
-        function updateCurrencies(language) {
-            const currencies = translations[language].currencies;
-            fromCurrency.innerHTML = '';
-            toCurrency.innerHTML = '';
+        async function fetchRates() {
+            const response = await fetch("https://v6.exchangerate-api.com/v6/020c6e77213ba847f6eaaf32/latest/USD");
+            const data = await response.json();
+            return data.conversion_rates;
+        }
 
-            for (const [code, name] of Object.entries(currencies)) {
-                fromCurrency.innerHTML += `<option value="${code}">${name}</option>`;
-                toCurrency.innerHTML += `<option value="${code}">${name}</option>`;
+        async function convertCurrency() {
+            const amount = parseFloat(document.getElementById("amount").value);
+            const fromCurrency = document.getElementById("fromCurrency").value;
+            const toCurrency = document.getElementById("toCurrency").value;
+            const commissionRate = parseFloat(document.getElementById("commission").value) || 0;
+
+            if (isNaN(amount) || amount <= 0) {
+                document.getElementById("result").textContent = translations[selectedLanguage].enterAmount;
+                return;
             }
+
+            const rates = await fetchRates();
+            const baseAmount = amount / rates[fromCurrency];
+            const convertedAmount = baseAmount * rates[toCurrency];
+            const commission = (commissionRate / 100) * convertedAmount;
+            const totalAmount = convertedAmount - commission;
+
+            document.getElementById("result").innerHTML = `
+                ${translations.ru.originalAmount}: ${amount.toFixed(2)} ${fromCurrency}<br>
+                ${translations.ru.convertedAmount}: ${convertedAmount.toFixed(2)} ${toCurrency}<br>
+                ${translations.ru.totalAmount}: ${totalAmount.toFixed(2)} ${toCurrency}
+            `;
         }
 
-        languageSelector.addEventListener("change", () => {
-            const lang = languageSelector.value;
-            translateUI(lang);
+        document.getElementById("convertButton").addEventListener("click", convertCurrency);
+        document.getElementById("languageSelector").addEventListener("change", function () {
+            const selectedLanguage = this.value;
+            translateUI(selectedLanguage);
         });
 
-        // Initialize default language
         translateUI("ru");
     </script>
 </body>
