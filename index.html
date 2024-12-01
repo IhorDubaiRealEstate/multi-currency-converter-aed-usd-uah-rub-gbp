@@ -168,6 +168,19 @@
         const fromCurrency = document.getElementById("fromCurrency");
         const toCurrency = document.getElementById("toCurrency");
 
+        function translateUI(language) {
+            const lang = translations[language];
+            document.getElementById("title").textContent = lang.title;
+            document.getElementById("convertButton").textContent = lang.calculate;
+            document.getElementById("amount").placeholder = lang.enterAmount;
+            document.getElementById("commission").placeholder = lang.commissionPlaceholder;
+            document.getElementById("developedBy").textContent = lang.developedBy;
+            document.getElementById("contact").textContent = lang.contact;
+            document.getElementById("phoneLabel").textContent = lang.phoneLabel;
+            document.getElementById("secondPhoneLabel").textContent = lang.secondPhoneLabel;
+            updateCurrencies(language);
+        }
+
         function updateCurrencies(language) {
             const currencies = translations[language].currencies;
             fromCurrency.innerHTML = '';
@@ -181,11 +194,11 @@
 
         languageSelector.addEventListener("change", () => {
             const lang = languageSelector.value;
-            updateCurrencies(lang);
+            translateUI(lang);
         });
 
         // Initialize default language
-        updateCurrencies("ru");
+        translateUI("ru");
     </script>
 </body>
 </html>
