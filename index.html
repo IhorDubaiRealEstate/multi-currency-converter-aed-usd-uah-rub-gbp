@@ -71,72 +71,106 @@
         .footer a:hover {
             text-decoration: underline;
         }
+
+        .language-select {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+
+        .language-select select {
+            background: #444;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 5px;
+            font-size: 14px;
+        }
     </style>
 </head>
 <body>
+    <div class="language-select">
+        <select id="language" onchange="changeLanguage()">
+            <option value="ru" selected>Русский</option>
+            <option value="en">English</option>
+            <option value="uk">Українська</option>
+            <option value="pl">Polski</option>
+        </select>
+    </div>
+
     <div class="container">
-        <h1>Универсальный Конвертер Валют</h1>
+        <h1 id="title">Универсальный Конвертер Валют</h1>
         <input type="number" id="amount" placeholder="Введите сумму">
         <select id="fromCurrency">
-            <option value="USD">🇺🇸 Доллары США (USD)</option>
-            <option value="UAH">🇺🇦 Украинские гривны (UAH)</option>
-            <option value="RUB">🇷🇺 Российские рубли (RUB)</option>
-            <option value="GBP">🇬🇧 Британские фунты (GBP)</option>
-            <option value="AED">🇦🇪 Дирхамы ОАЭ (AED)</option>
+            <option value="USD">Доллары США (USD)</option>
+            <option value="UAH">Украинские гривны (UAH)</option>
+            <option value="RUB">Российские рубли (RUB)</option>
+            <option value="GBP">Британские фунты (GBP)</option>
+            <option value="AED">Дирхамы ОАЭ (AED)</option>
         </select>
         <select id="toCurrency">
-            <option value="USD">🇺🇸 Доллары США (USD)</option>
-            <option value="UAH">🇺🇦 Украинские гривны (UAH)</option>
-            <option value="RUB">🇷🇺 Российские рубли (RUB)</option>
-            <option value="GBP">🇬🇧 Британские фунты (GBP)</option>
-            <option value="AED">🇦🇪 Дирхамы ОАЭ (AED)</option>
+            <option value="USD">Доллары США (USD)</option>
+            <option value="UAH">Украинские гривны (UAH)</option>
+            <option value="RUB">Российские рубли (RUB)</option>
+            <option value="GBP">Британские фунты (GBP)</option>
+            <option value="AED">Дирхамы ОАЭ (AED)</option>
         </select>
         <input type="number" id="commission" placeholder="Процент комиссии">
         <button onclick="convertCurrency()">Рассчитать</button>
         <div class="result" id="result"></div>
     </div>
     <div class="footer">
-        Разработано с ❤️ Ihor Dubai Real Estate<br>
-        Свяжитесь со мной:<br>
+        <span id="footer-text">Разработано с ❤️ Ihor Dubai Real Estate</span><br>
+        <span id="contact-text">Свяжитесь со мной:</span><br>
         Instagram: <a href="https://instagram.com/ihorestatelife" target="_blank">@ihorestatelife</a><br>
         Телефон: <a href="tel:+971543031920">+971 543 031 920</a><br>
         Второй телефон: <a href="tel:+971527429306">+971 527 429 306</a>
     </div>
 
     <script>
-        async function convertCurrency() {
-            const amount = parseFloat(document.getElementById('amount').value);
-            const fromCurrency = document.getElementById('fromCurrency').value;
-            const toCurrency = document.getElementById('toCurrency').value;
-            const commission = parseFloat(document.getElementById('commission').value) || 0;
-
-            if (!amount || !fromCurrency || !toCurrency) {
-                document.getElementById('result').innerText = 'Пожалуйста, заполните все поля!';
-                return;
+        const translations = {
+            ru: {
+                title: "Универсальный Конвертер Валют",
+                amountPlaceholder: "Введите сумму",
+                commissionPlaceholder: "Процент комиссии",
+                calculate: "Рассчитать",
+                footer: "Разработано с ❤️ Ihor Dubai Real Estate",
+                contact: "Свяжитесь со мной:"
+            },
+            en: {
+                title: "Universal Currency Converter",
+                amountPlaceholder: "Enter amount",
+                commissionPlaceholder: "Commission percentage",
+                calculate: "Calculate",
+                footer: "Developed with ❤️ by Ihor Dubai Real Estate",
+                contact: "Contact me:"
+            },
+            uk: {
+                title: "Універсальний Конвертер Валют",
+                amountPlaceholder: "Введіть суму",
+                commissionPlaceholder: "Відсоток комісії",
+                calculate: "Розрахувати",
+                footer: "Розроблено з ❤️ Ihor Dubai Real Estate",
+                contact: "Зв'яжіться зі мною:"
+            },
+            pl: {
+                title: "Uniwersalny Przelicznik Walut",
+                amountPlaceholder: "Wpisz kwotę",
+                commissionPlaceholder: "Procent prowizji",
+                calculate: "Oblicz",
+                footer: "Stworzone z ❤️ przez Ihor Dubai Real Estate",
+                contact: "Skontaktuj się ze mną:"
             }
+        };
 
-            const apiUrl = `https://v6.exchangerate-api.com/v6/020c6e77213ba847f6eaaf32/latest/${fromCurrency}`;
-            try {
-                const response = await fetch(apiUrl);
-                const data = await response.json();
-
-                if (data.conversion_rates) {
-                    const rate = data.conversion_rates[toCurrency];
-                    const convertedAmount = amount * rate;
-                    const commissionAmount = (commission / 100) * convertedAmount;
-                    const total = convertedAmount - commissionAmount;
-
-                    document.getElementById('result').innerHTML = `
-                        Изначальная сумма: ${amount.toFixed(2)} ${fromCurrency}<br>
-                        Конвертированная сумма: ${convertedAmount.toFixed(2)} ${toCurrency}<br>
-                        Итоговая сумма: ${total.toFixed(2)} ${toCurrency}
-                    `;
-                } else {
-                    document.getElementById('result').innerText = 'Не удалось получить данные о курсе валют.';
-                }
-            } catch (error) {
-                document.getElementById('result').innerText = 'Ошибка при получении данных о курсе валют.';
-            }
+        function changeLanguage() {
+            const lang = document.getElementById("language").value;
+            document.getElementById("title").innerText = translations[lang].title;
+            document.getElementById("amount").placeholder = translations[lang].amountPlaceholder;
+            document.getElementById("commission").placeholder = translations[lang].commissionPlaceholder;
+            document.querySelector("button").innerText = translations[lang].calculate;
+            document.getElementById("footer-text").innerText = translations[lang].footer;
+            document.getElementById("contact-text").innerText = translations[lang].contact;
         }
     </script>
 </body>
