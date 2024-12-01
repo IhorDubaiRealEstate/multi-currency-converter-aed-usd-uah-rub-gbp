@@ -4,56 +4,147 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Универсальный конвертер валют</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        h1 {
+            color: #4CAF50;
+            text-align: center;
+        }
+
+        form {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        label {
+            font-weight: bold;
+            margin-top: 10px;
+            display: block;
+        }
+
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        input[type="checkbox"] {
+            margin-right: 5px;
+        }
+
+        button {
+            width: 100%;
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        #result {
+            background-color: #e8f5e9;
+            border: 1px solid #c8e6c9;
+            border-radius: 4px;
+            padding: 10px;
+            margin-top: 15px;
+            font-size: 16px;
+            color: #2e7d32;
+        }
+
+        footer {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        footer a {
+            color: #4CAF50;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
-    <h1>Универсальный конвертер валют</h1>
-    <form id="converter-form" onsubmit="event.preventDefault(); calculate();">
-        <label for="amount">Введите сумму:</label>
-        <input type="number" id="amount" placeholder="Введите сумму" required>
-        
-        <label for="fromCurrency">Из валюты:</label>
-        <select id="fromCurrency">
-            <option value="USD">Доллары США (USD)</option>
-            <option value="UAH">Украинские гривны (UAH)</option>
-            <option value="RUB">Российские рубли (RUB)</option>
-            <option value="GBP">Британские фунты (GBP)</option>
-            <option value="AED">Дирхамы ОАЭ (AED)</option>
-        </select>
-        
-        <label for="toCurrency">В валюту:</label>
-        <select id="toCurrency">
-            <option value="USD">Доллары США (USD)</option>
-            <option value="UAH">Украинские гривны (UAH)</option>
-            <option value="RUB">Российские рубли (RUB)</option>
-            <option value="GBP">Британские фунты (GBP)</option>
-            <option value="AED">Дирхамы ОАЭ (AED)</option>
-        </select>
+    <div>
+        <h1>Универсальный конвертер валют</h1>
+        <form id="converter-form" onsubmit="event.preventDefault(); calculate();">
+            <label for="amount">Введите сумму:</label>
+            <input type="number" id="amount" placeholder="Введите сумму" required tabindex="1">
+            
+            <label for="fromCurrency">Из валюты:</label>
+            <select id="fromCurrency" tabindex="2">
+                <option value="USD">Доллары США (USD)</option>
+                <option value="UAH">Украинские гривны (UAH)</option>
+                <option value="RUB">Российские рубли (RUB)</option>
+                <option value="GBP">Британские фунты (GBP)</option>
+                <option value="AED">Дирхамы ОАЭ (AED)</option>
+            </select>
+            
+            <label for="toCurrency">В валюту:</label>
+            <select id="toCurrency" tabindex="3">
+                <option value="USD">Доллары США (USD)</option>
+                <option value="UAH">Украинские гривны (UAH)</option>
+                <option value="RUB">Российские рубли (RUB)</option>
+                <option value="GBP">Британские фунты (GBP)</option>
+                <option value="AED">Дирхамы ОАЭ (AED)</option>
+            </select>
 
-        <label for="commission">Процент комиссии:</label>
-        <input type="number" id="commission" placeholder="Введите % комиссии" value="15" disabled>
-        <label for="includeCommission">
-            <input type="checkbox" id="includeCommission" checked onclick="toggleCommission()"> Включить комиссию
-        </label>
+            <label for="commission">Процент комиссии:</label>
+            <input type="number" id="commission" placeholder="Введите % комиссии" value="0" disabled tabindex="4">
+            <label for="includeCommission" tabindex="5">
+                <input type="checkbox" id="includeCommission" onclick="toggleCommission()"> Включить комиссию
+            </label>
 
-        <button type="submit">Рассчитать</button>
-    </form>
-    <h3>Результаты:</h3>
-    <p id="result"></p>
+            <button type="submit" tabindex="6">Рассчитать</button>
+        </form>
+        <div id="result"></div>
+    </div>
+    <footer>
+        Разработано с ❤️ <a href="https://github.com/ihordubairealestate" target="_blank">Ihor Dubai Real Estate</a>
+    </footer>
 
     <script>
-        // Функция форматирования чисел с разделением разрядов
         function formatNumber(number) {
             return number.toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
         }
 
-        // Переключение ввода комиссии
         function toggleCommission() {
             const commissionInput = document.getElementById("commission");
             commissionInput.disabled = !document.getElementById("includeCommission").checked;
             if (!commissionInput.disabled) {
-                commissionInput.value = "15"; // Возвращаем значение по умолчанию
+                commissionInput.value = "15";
             } else {
-                commissionInput.value = "0"; // Устанавливаем комиссию 0
+                commissionInput.value = "0";
             }
         }
 
@@ -68,6 +159,7 @@
             const fromCurrency = document.getElementById('fromCurrency').value;
             const toCurrency = document.getElementById('toCurrency').value;
             const commissionRate = parseFloat(document.getElementById('commission').value) / 100;
+            const includeCommission = document.getElementById("includeCommission").checked;
 
             if (isNaN(amount) || amount <= 0) {
                 document.getElementById('result').innerText = "Пожалуйста, введите корректную сумму.";
@@ -75,23 +167,4 @@
             }
 
             if (fromCurrency === toCurrency) {
-                document.getElementById('result').innerText = "Выберите разные валюты для конвертации.";
-                return;
-            }
-
-            const exchangeRate = await getExchangeRate(fromCurrency, toCurrency);
-            const convertedAmount = amount * exchangeRate;
-            const commission = convertedAmount * commissionRate;
-            const finalAmount = convertedAmount - commission;
-
-            document.getElementById('result').innerHTML = `
-                <strong>Изначальная сумма:</strong> ${formatNumber(amount)} ${fromCurrency}<br>
-                <strong>Курс (${fromCurrency} → ${toCurrency}):</strong> ${formatNumber(exchangeRate)}<br>
-                <strong>Конвертированная сумма:</strong> ${formatNumber(convertedAmount)} ${toCurrency}<br>
-                <strong>Комиссия (${(commissionRate * 100).toFixed(2)}%):</strong> ${formatNumber(commission)} ${toCurrency}<br>
-                <strong>Итоговая сумма после комиссии:</strong> ${formatNumber(finalAmount)} ${toCurrency}
-            `;
-        }
-    </script>
-</body>
-</html>
+                document.getElementById('result
