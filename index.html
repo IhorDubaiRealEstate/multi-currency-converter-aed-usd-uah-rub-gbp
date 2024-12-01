@@ -1,90 +1,87 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Универсальный конвертер валют</title>
+    <title>Универсальный Конвертер Валют</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #2c2c2c;
-            color: #ffffff;
+            background-color: #333;
+            color: #fff;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
         }
 
-        .container {
-            background: #3c3c3c;
-            border-radius: 10px;
+        .converter-container {
+            background-color: #444;
             padding: 20px;
-            width: 90%;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            width: 100%;
             max-width: 400px;
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+            text-align: center;
         }
 
-        h1 {
-            text-align: center;
+        .converter-container h1 {
+            margin-bottom: 20px;
+            font-size: 1.5em;
             color: #32CD32;
         }
 
-        label {
-            display: block;
-            margin-top: 10px;
-        }
-
-        input, select, button {
-            width: 100%;
-            margin-top: 5px;
+        .converter-container select, .converter-container input {
+            width: calc(100% - 20px);
+            margin-bottom: 15px;
             padding: 10px;
-            border: none;
-            border-radius: 5px;
             font-size: 1em;
+            border-radius: 5px;
+            border: none;
         }
 
-        input[type="number"] {
-            background-color: #ffffff;
-            color: #000000;
-        }
-
-        button {
-            background-color: #32CD32;
-            color: #ffffff;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        button:hover {
-            background-color: #28a428;
-        }
-
-        .contact {
+        .converter-container input {
             text-align: center;
+        }
+
+        .converter-container button {
+            background-color: #32CD32;
+            color: #fff;
+            border: none;
+            padding: 10px;
+            font-size: 1em;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .converter-container button:hover {
+            background-color: #28a745;
+        }
+
+        #results {
+            margin-top: 20px;
+            font-size: 1em;
+            color: #fff;
+        }
+
+        .footer {
             margin-top: 20px;
             font-size: 0.9em;
         }
 
-        .contact a {
+        .footer a {
             color: #32CD32;
             text-decoration: none;
-        }
-
-        .contact a:hover {
-            text-decoration: underline;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Универсальный конвертер валют</h1>
-        <label for="amount">Введите сумму:</label>
-        <input type="number" id="amount" placeholder="Введите сумму">
+    <div class="converter-container">
+        <h1>Универсальный Конвертер Валют</h1>
 
-        <label for="fromCurrency">Из валюты:</label>
+        <input type="number" id="amount" placeholder="Введите сумму" onfocus="this.value=''" />
         <select id="fromCurrency">
             <option value="USD">Доллары США (USD)</option>
             <option value="UAH">Украинские гривны (UAH)</option>
@@ -93,7 +90,6 @@
             <option value="AED">Дирхамы ОАЭ (AED)</option>
         </select>
 
-        <label for="toCurrency">В валюту:</label>
         <select id="toCurrency">
             <option value="USD">Доллары США (USD)</option>
             <option value="UAH">Украинские гривны (UAH)</option>
@@ -102,59 +98,74 @@
             <option value="AED">Дирхамы ОАЭ (AED)</option>
         </select>
 
-        <label for="commission">Процент комиссии:</label>
-        <input type="number" id="commission" placeholder="0" value="0">
+        <input type="number" id="commission" placeholder="Процент комиссии" onfocus="this.value=''" />
 
         <button onclick="convertCurrency()">Рассчитать</button>
-        <div id="results"></div>
-    </div>
 
-    <div class="contact">
-        <p>Разработано с ❤️ <a href="https://www.instagram.com/ihorestatelife" target="_blank">Ihor Dubai Real Estate</a></p>
-        <p>Свяжитесь со мной:</p>
-        <p>Instagram: <a href="https://www.instagram.com/ihorestatelife" target="_blank">@ihorestatelife</a></p>
-        <p>Телефон: <a href="tel:+971543031920">+971 543 031 920</a></p>
-        <p>Второй телефон: <a href="tel:+971527429306">+971 527 429 306</a></p>
+        <div id="results"></div>
+
+        <div class="footer">
+            <p>Разработано с ❤️ <a href="https://instagram.com/ihorestatelife" target="_blank">Ihor Dubai Real Estate</a></p>
+            <p>Свяжитесь со мной:<br>
+                Instagram: <a href="https://instagram.com/ihorestatelife" target="_blank">@ihorestatelife</a><br>
+                Телефон: <a href="tel:+971543031920">+971 543 031 920</a><br>
+                Второй телефон: <a href="tel:+971527429306">+971 527 429 306</a>
+            </p>
+        </div>
     </div>
 
     <script>
-        function clearPlaceholder(event) {
-            const commissionInput = event.target;
-            if (commissionInput.value === "0") {
-                commissionInput.value = "";
+        async function fetchRates() {
+            const url = 'https://v6.exchangerate-api.com/v6/020c6e77213ba847f6eaaf32/latest/USD';
+
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+
+                if (data.result === "success") {
+                    return data.conversion_rates;
+                } else {
+                    console.error('Ошибка API:', data);
+                    return null;
+                }
+            } catch (error) {
+                console.error('Ошибка при обращении к API:', error);
+                return null;
             }
         }
 
-        document.getElementById('commission').addEventListener('focus', clearPlaceholder);
+        async function convertCurrency() {
+            const rates = await fetchRates();
 
-        function convertCurrency() {
+            if (!rates) {
+                alert('Ошибка при загрузке курсов валют');
+                return;
+            }
+
             const amount = parseFloat(document.getElementById('amount').value);
             const fromCurrency = document.getElementById('fromCurrency').value;
             const toCurrency = document.getElementById('toCurrency').value;
             const commissionPercent = parseFloat(document.getElementById('commission').value) || 0;
-
-            const rates = {
-                USD: 1,
-                UAH: 37,
-                RUB: 90,
-                GBP: 0.75,
-                AED: 3.67
-            };
 
             if (!amount || amount <= 0) {
                 alert("Введите корректную сумму!");
                 return;
             }
 
-            if (!rates[fromCurrency] || !rates[toCurrency]) {
-                alert("Некорректные валюты!");
+            const fromRate = rates[fromCurrency];
+            const toRate = rates[toCurrency];
+
+            if (!fromRate || !toRate) {
+                alert("Ошибка: выбранные валюты не поддерживаются.");
                 return;
             }
 
-            const convertedAmount = (amount / rates[fromCurrency]) * rates[toCurrency];
-            const commission = (commissionPercent / 100) * convertedAmount;
+            // Конвертация
+            const convertedAmount = (amount / fromRate) * toRate;
+            const commission = (commissionPercent > 0 ? (commissionPercent / 100) * convertedAmount : 0);
             const finalAmount = convertedAmount - commission;
 
+            // Обновление интерфейса
             const resultsDiv = document.getElementById('results');
             resultsDiv.innerHTML = `
                 <p>Изначальная сумма: ${amount.toFixed(2)} ${fromCurrency}</p>
