@@ -107,18 +107,18 @@
         <h1 id="title">Универсальный Конвертер Валют</h1>
         <input type="number" id="amount" placeholder="Введите сумму" />
         <select id="fromCurrency">
-            <option value="RUB" selected data-lang="ru">🇷🇺 Российские рубли (RUB)</option>
-            <option value="USD" data-lang="en">🇺🇸 Доллары США (USD)</option>
-            <option value="UAH" data-lang="ua">🇺🇦 Украинские гривны (UAH)</option>
-            <option value="GBP" data-lang="en">🇬🇧 Британские фунты (GBP)</option>
-            <option value="AED" data-lang="ar">🇦🇪 Дирхамы ОАЭ (AED)</option>
+            <option value="RUB">🇷🇺 Российские рубли (RUB)</option>
+            <option value="USD">🇺🇸 Доллары США (USD)</option>
+            <option value="UAH">🇺🇦 Украинские гривны (UAH)</option>
+            <option value="GBP">🇬🇧 Британские фунты (GBP)</option>
+            <option value="AED">🇦🇪 Дирхамы ОАЭ (AED)</option>
         </select>
         <select id="toCurrency">
-            <option value="AED" selected data-lang="ar">🇦🇪 Дирхамы ОАЭ (AED)</option>
-            <option value="USD" data-lang="en">🇺🇸 Доллары США (USD)</option>
-            <option value="UAH" data-lang="ua">🇺🇦 Украинские гривны (UAH)</option>
-            <option value="RUB" data-lang="ru">🇷🇺 Российские рубли (RUB)</option>
-            <option value="GBP" data-lang="en">🇬🇧 Британские фунты (GBP)</option>
+            <option value="AED">🇦🇪 Дирхамы ОАЭ (AED)</option>
+            <option value="USD">🇺🇸 Доллары США (USD)</option>
+            <option value="UAH">🇺🇦 Украинские гривны (UAH)</option>
+            <option value="RUB">🇷🇺 Российские рубли (RUB)</option>
+            <option value="GBP">🇬🇧 Британские фунты (GBP)</option>
         </select>
         <input type="number" id="commission" placeholder="Процент комиссии" value="0" />
         <button id="convertButton">Рассчитать</button>
@@ -142,8 +142,6 @@
                 totalAmount: "Итоговая сумма",
                 enterAmount: "Введите сумму",
                 commissionPlaceholder: "Процент комиссии",
-                million: "млн",
-                thousand: "тыс",
                 developedBy: "Разработано с ❤️ Ihor Dubai Real Estate",
                 contact: "Свяжитесь со мной:",
                 phoneLabel: "Телефон:",
@@ -157,31 +155,67 @@
                 totalAmount: "Total Amount",
                 enterAmount: "Enter Amount",
                 commissionPlaceholder: "Commission Percentage",
-                million: "M",
-                thousand: "K",
                 developedBy: "Developed with ❤️ by Ihor Dubai Real Estate",
                 contact: "Contact me:",
                 phoneLabel: "Phone:",
                 secondPhoneLabel: "Second phone:"
             },
-            // Add more translations here
+            // Add more translations here...
         };
 
         const languageSelector = document.getElementById("languageSelector");
-        const translateElements = () => {
-            const lang = languageSelector.value;
-            document.getElementById("title").textContent = translations[lang].title;
-            document.getElementById("convertButton").textContent = translations[lang].calculate;
-            document.getElementById("amount").placeholder = translations[lang].enterAmount;
-            document.getElementById("commission").placeholder = translations[lang].commissionPlaceholder;
-            document.getElementById("developedBy").textContent = translations[lang].developedBy;
-            document.getElementById("contact").textContent = translations[lang].contact;
-            document.getElementById("phoneLabel").textContent = translations[lang].phoneLabel;
-            document.getElementById("secondPhoneLabel").textContent = translations[lang].secondPhoneLabel;
-        };
+        const title = document.getElementById("title");
+        const convertButton = document.getElementById("convertButton");
+        const amountInput = document.getElementById("amount");
+        const commissionInput = document.getElementById("commission");
+        const result = document.getElementById("result");
+        const developedBy = document.getElementById("developedBy");
+        const contact = document.getElementById("contact");
+        const phoneLabel = document.getElementById("phoneLabel");
+        const secondPhoneLabel = document.getElementById("secondPhoneLabel");
 
-        languageSelector.addEventListener("change", translateElements);
-        translateElements(); // Initial translation
+        languageSelector.addEventListener("change", () => {
+            const lang = languageSelector.value;
+            title.textContent = translations[lang].title;
+            convertButton.textContent = translations[lang].calculate;
+            amountInput.placeholder = translations[lang].enterAmount;
+            commissionInput.placeholder = translations[lang].commissionPlaceholder;
+            developedBy.textContent = translations[lang].developedBy;
+            contact.textContent = translations[lang].contact;
+            phoneLabel.textContent = translations[lang].phoneLabel;
+            secondPhoneLabel.textContent = translations[lang].secondPhoneLabel;
+        });
+
+        async function fetchRates() {
+            const response = await fetch("https://v6.exchangerate-api.com/v6/020c6e77213ba847f6eaaf32/latest/USD");
+            const data = await response.json();
+            return data.conversion_rates;
+        }
+
+        async function convertCurrency() {
+            const rates = await fetchRates();
+            const amount = parseFloat(amountInput.value);
+            const fromCurrency = document.getElementById("fromCurrency").value;
+            const toCurrency = document.getElementById("toCurrency").value;
+            const commission = parseFloat(commissionInput.value) || 0;
+
+            if (isNaN(amount) || amount <= 0) {
+                result.textContent = "Введите корректную сумму.";
+                return;
+            }
+
+            const convertedAmount = (amount / rates[fromCurrency]) * rates[toCurrency];
+            const commissionValue = (commission / 100) * convertedAmount;
+            const finalAmount = convertedAmount - commissionValue;
+
+            result.innerHTML = `
+                ${translations[languageSelector.value].originalAmount}: ${amount.toFixed(2)} ${fromCurrency}<br>
+                ${translations[languageSelector.value].convertedAmount}: ${convertedAmount.toFixed(2)} ${toCurrency}<br>
+                ${translations[languageSelector.value].totalAmount}: ${finalAmount.toFixed(2)} ${toCurrency}
+            `;
+        }
+
+        convertButton.addEventListener("click", convertCurrency);
     </script>
 </body>
 </html>
