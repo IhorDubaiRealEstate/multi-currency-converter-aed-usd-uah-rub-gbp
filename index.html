@@ -1,179 +1,173 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Универсальный Конвертер Валют</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #333;
-            color: #fff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Универсальный Конвертер Валют</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #2d2d2d;
+      color: #ffffff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
 
-        .converter-container {
-            background-color: #444;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            width: 100%;
-            max-width: 400px;
-            text-align: center;
-        }
+    .converter-container {
+      background-color: #3b3b3b;
+      border-radius: 10px;
+      padding: 20px;
+      width: 90%;
+      max-width: 400px;
+      text-align: center;
+    }
 
-        .converter-container h1 {
-            margin-bottom: 20px;
-            font-size: 1.5em;
-            color: #32CD32;
-        }
+    h1 {
+      color: #3dda42;
+    }
 
-        .converter-container select, .converter-container input {
-            width: calc(100% - 20px);
-            margin-bottom: 15px;
-            padding: 10px;
-            font-size: 1em;
-            border-radius: 5px;
-            border: none;
-        }
+    select, input {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+      background-color: #ffffff;
+      color: #000000;
+    }
 
-        .converter-container input {
-            text-align: center;
-        }
+    button {
+      background-color: #3dda42;
+      color: #ffffff;
+      border: none;
+      padding: 10px 20px;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+      width: 100%;
+    }
 
-        .converter-container button {
-            background-color: #32CD32;
-            color: #fff;
-            border: none;
-            padding: 10px;
-            font-size: 1em;
-            border-radius: 5px;
-            cursor: pointer;
-            width: 100%;
-        }
+    button:hover {
+      background-color: #32c936;
+    }
 
-        .converter-container button:hover {
-            background-color: #28a745;
-        }
+    .result {
+      margin-top: 20px;
+    }
 
-        #results {
-            margin-top: 20px;
-            font-size: 1em;
-            color: #fff;
-        }
+    .credits {
+      margin-top: 20px;
+      font-size: 14px;
+    }
 
-        .footer {
-            margin-top: 20px;
-            font-size: 0.9em;
-        }
+    .credits a {
+      color: #3dda42;
+      text-decoration: none;
+    }
 
-        .footer a {
-            color: #32CD32;
-            text-decoration: none;
-        }
-    </style>
+    /* Flags CSS */
+    select {
+      padding-left: 50px; /* Отступ для флага */
+      background-repeat: no-repeat;
+      background-position: 10px center;
+      background-size: 30px 20px;
+    }
+
+    option[data-icon="us"] {
+      background-image: url('https://flagcdn.com/w40/us.png');
+    }
+
+    option[data-icon="ua"] {
+      background-image: url('https://flagcdn.com/w40/ua.png');
+    }
+
+    option[data-icon="ru"] {
+      background-image: url('https://flagcdn.com/w40/ru.png');
+    }
+
+    option[data-icon="gb"] {
+      background-image: url('https://flagcdn.com/w40/gb.png');
+    }
+
+    option[data-icon="ae"] {
+      background-image: url('https://flagcdn.com/w40/ae.png');
+    }
+  </style>
 </head>
 <body>
-    <div class="converter-container">
-        <h1>Универсальный Конвертер Валют</h1>
-
-        <input type="number" id="amount" placeholder="Введите сумму" onfocus="this.value=''" />
-        <select id="fromCurrency">
-            <option value="USD">Доллары США (USD)</option>
-            <option value="UAH">Украинские гривны (UAH)</option>
-            <option value="RUB">Российские рубли (RUB)</option>
-            <option value="GBP">Британские фунты (GBP)</option>
-            <option value="AED">Дирхамы ОАЭ (AED)</option>
-        </select>
-
-        <select id="toCurrency">
-            <option value="USD">Доллары США (USD)</option>
-            <option value="UAH">Украинские гривны (UAH)</option>
-            <option value="RUB">Российские рубли (RUB)</option>
-            <option value="GBP">Британские фунты (GBP)</option>
-            <option value="AED">Дирхамы ОАЭ (AED)</option>
-        </select>
-
-        <input type="number" id="commission" placeholder="Процент комиссии" onfocus="this.value=''" />
-
-        <button onclick="convertCurrency()">Рассчитать</button>
-
-        <div id="results"></div>
-
-        <div class="footer">
-            <p>Разработано с ❤️ <a href="https://instagram.com/ihorestatelife" target="_blank">Ihor Dubai Real Estate</a></p>
-            <p>Свяжитесь со мной:<br>
-                Instagram: <a href="https://instagram.com/ihorestatelife" target="_blank">@ihorestatelife</a><br>
-                Телефон: <a href="tel:+971543031920">+971 543 031 920</a><br>
-                Второй телефон: <a href="tel:+971527429306">+971 527 429 306</a>
-            </p>
-        </div>
+  <div class="converter-container">
+    <h1>Универсальный Конвертер Валют</h1>
+    <input type="number" id="amount" placeholder="Введите сумму" onfocus="clearDefaultValue(this)">
+    <select id="fromCurrency">
+      <option value="USD" data-icon="us">Доллары США (USD)</option>
+      <option value="UAH" data-icon="ua">Украинские гривны (UAH)</option>
+      <option value="RUB" data-icon="ru">Российские рубли (RUB)</option>
+      <option value="GBP" data-icon="gb">Британские фунты (GBP)</option>
+      <option value="AED" data-icon="ae">Дирхамы ОАЭ (AED)</option>
+    </select>
+    <select id="toCurrency">
+      <option value="USD" data-icon="us">Доллары США (USD)</option>
+      <option value="UAH" data-icon="ua">Украинские гривны (UAH)</option>
+      <option value="RUB" data-icon="ru">Российские рубли (RUB)</option>
+      <option value="GBP" data-icon="gb">Британские фунты (GBP)</option>
+      <option value="AED" data-icon="ae">Дирхамы ОАЭ (AED)</option>
+    </select>
+    <input type="number" id="commission" placeholder="Процент комиссии" onfocus="clearDefaultValue(this)">
+    <button onclick="convert()">Рассчитать</button>
+    <div class="result" id="result"></div>
+    <div class="credits">
+      Разработано с ❤️ <a href="https://www.instagram.com/ihorestatelife/" target="_blank">Ihor Dubai Real Estate</a><br>
+      Свяжитесь со мной:<br>
+      Instagram: <a href="https://www.instagram.com/ihorestatelife/" target="_blank">@ihorestatelife</a><br>
+      Телефон: <a href="tel:+971543031920">+971 543 031 920</a><br>
+      Второй телефон: <a href="tel:+971527429306">+971 527 429 306</a>
     </div>
+  </div>
+  <script>
+    async function convert() {
+      const amount = parseFloat(document.getElementById('amount').value);
+      const fromCurrency = document.getElementById('fromCurrency').value;
+      const toCurrency = document.getElementById('toCurrency').value;
+      const commission = parseFloat(document.getElementById('commission').value || 0);
 
-    <script>
-        async function fetchRates() {
-            const url = 'https://v6.exchangerate-api.com/v6/020c6e77213ba847f6eaaf32/latest/USD';
+      if (!amount || isNaN(amount)) {
+        alert('Введите корректную сумму');
+        return;
+      }
 
-            try {
-                const response = await fetch(url);
-                const data = await response.json();
+      try {
+        const response = await fetch(`https://v6.exchangerate-api.com/v6/020c6e77213ba847f6eaaf32/latest/${fromCurrency}`);
+        const data = await response.json();
 
-                if (data.result === "success") {
-                    return data.conversion_rates;
-                } else {
-                    console.error('Ошибка API:', data);
-                    return null;
-                }
-            } catch (error) {
-                console.error('Ошибка при обращении к API:', error);
-                return null;
-            }
+        if (data.result === 'success') {
+          const rate = data.conversion_rates[toCurrency];
+          const convertedAmount = (amount * rate).toFixed(2);
+          const commissionAmount = ((convertedAmount * commission) / 100).toFixed(2);
+          const totalAmount = (parseFloat(convertedAmount) - parseFloat(commissionAmount)).toFixed(2);
+
+          document.getElementById('result').innerHTML = `
+            <p>Изначальная сумма: ${amount.toFixed(2)} ${fromCurrency}</p>
+            <p>Конвертированная сумма: ${convertedAmount} ${toCurrency}</p>
+            <p>Комиссия (${commission}%): ${commissionAmount} ${toCurrency}</p>
+            <p>Итоговая сумма: ${totalAmount} ${toCurrency}</p>
+          `;
+        } else {
+          alert('Ошибка получения данных о курсе валют');
         }
+      } catch (error) {
+        alert('Ошибка соединения с сервером');
+      }
+    }
 
-        async function convertCurrency() {
-            const rates = await fetchRates();
-
-            if (!rates) {
-                alert('Ошибка при загрузке курсов валют');
-                return;
-            }
-
-            const amount = parseFloat(document.getElementById('amount').value);
-            const fromCurrency = document.getElementById('fromCurrency').value;
-            const toCurrency = document.getElementById('toCurrency').value;
-            const commissionPercent = parseFloat(document.getElementById('commission').value) || 0;
-
-            if (!amount || amount <= 0) {
-                alert("Введите корректную сумму!");
-                return;
-            }
-
-            const fromRate = rates[fromCurrency];
-            const toRate = rates[toCurrency];
-
-            if (!fromRate || !toRate) {
-                alert("Ошибка: выбранные валюты не поддерживаются.");
-                return;
-            }
-
-            // Конвертация
-            const convertedAmount = (amount / fromRate) * toRate;
-            const commission = (commissionPercent > 0 ? (commissionPercent / 100) * convertedAmount : 0);
-            const finalAmount = convertedAmount - commission;
-
-            // Обновление интерфейса
-            const resultsDiv = document.getElementById('results');
-            resultsDiv.innerHTML = `
-                <p>Изначальная сумма: ${amount.toFixed(2)} ${fromCurrency}</p>
-                <p>Конвертированная сумма: ${convertedAmount.toFixed(2)} ${toCurrency}</p>
-                ${commissionPercent > 0 ? `<p>Комиссия (${commissionPercent}%): ${commission.toFixed(2)} ${toCurrency}</p>` : ""}
-                <p>Итоговая сумма: ${finalAmount.toFixed(2)} ${toCurrency}</p>
-            `;
-        }
-    </script>
+    function clearDefaultValue(input) {
+      if (input.value === '0') {
+        input.value = '';
+      }
+    }
+  </script>
 </body>
 </html>
