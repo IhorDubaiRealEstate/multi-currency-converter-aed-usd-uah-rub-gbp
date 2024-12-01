@@ -7,34 +7,36 @@
 </head>
 <body>
     <h1>Универсальный конвертер валют</h1>
-    <label for="amount">Введите сумму:</label>
-    <input type="number" id="amount" placeholder="Введите сумму" required>
-    
-    <label for="fromCurrency">Из валюты:</label>
-    <select id="fromCurrency">
-        <option value="USD">Доллары США (USD)</option>
-        <option value="UAH">Украинские гривны (UAH)</option>
-        <option value="RUB">Российские рубли (RUB)</option>
-        <option value="GBP">Британские фунты (GBP)</option>
-        <option value="AED">Дирхамы ОАЭ (AED)</option>
-    </select>
-    
-    <label for="toCurrency">В валюту:</label>
-    <select id="toCurrency">
-        <option value="USD">Доллары США (USD)</option>
-        <option value="UAH">Украинские гривны (UAH)</option>
-        <option value="RUB">Российские рубли (RUB)</option>
-        <option value="GBP">Британские фунты (GBP)</option>
-        <option value="AED">Дирхамы ОАЭ (AED)</option>
-    </select>
+    <form id="converter-form" onsubmit="event.preventDefault(); calculate();">
+        <label for="amount">Введите сумму:</label>
+        <input type="number" id="amount" placeholder="Введите сумму" required>
+        
+        <label for="fromCurrency">Из валюты:</label>
+        <select id="fromCurrency">
+            <option value="USD">Доллары США (USD)</option>
+            <option value="UAH">Украинские гривны (UAH)</option>
+            <option value="RUB">Российские рубли (RUB)</option>
+            <option value="GBP">Британские фунты (GBP)</option>
+            <option value="AED">Дирхамы ОАЭ (AED)</option>
+        </select>
+        
+        <label for="toCurrency">В валюту:</label>
+        <select id="toCurrency">
+            <option value="USD">Доллары США (USD)</option>
+            <option value="UAH">Украинские гривны (UAH)</option>
+            <option value="RUB">Российские рубли (RUB)</option>
+            <option value="GBP">Британские фунты (GBP)</option>
+            <option value="AED">Дирхамы ОАЭ (AED)</option>
+        </select>
 
-    <label for="commission">Процент комиссии:</label>
-    <input type="number" id="commission" placeholder="Введите % комиссии" value="15" disabled>
-    <label for="includeCommission">
-        <input type="checkbox" id="includeCommission" checked onclick="toggleCommission()"> Включить комиссию
-    </label>
+        <label for="commission">Процент комиссии:</label>
+        <input type="number" id="commission" placeholder="Введите % комиссии" value="15" disabled>
+        <label for="includeCommission">
+            <input type="checkbox" id="includeCommission" checked onclick="toggleCommission()"> Включить комиссию
+        </label>
 
-    <button onclick="calculate()">Рассчитать</button>
+        <button type="submit">Рассчитать</button>
+    </form>
     <h3>Результаты:</h3>
     <p id="result"></p>
 
