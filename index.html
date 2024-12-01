@@ -10,26 +10,10 @@
             color: #ffffff;
             font-family: Arial, sans-serif;
             display: flex;
-            flex-direction: column;
-            align-items: center;
             justify-content: center;
+            align-items: center;
             height: 100vh;
             margin: 0;
-        }
-
-        .language-selector {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-        }
-
-        .language-selector select {
-            background-color: #444444;
-            color: #ffffff;
-            border: none;
-            border-radius: 5px;
-            padding: 5px 10px;
-            font-size: 14px;
         }
 
         .container {
@@ -92,19 +76,24 @@
         .footer a:hover {
             text-decoration: underline;
         }
+
+        #languageSelector {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
     </style>
 </head>
 <body>
-    <div class="language-selector">
-        <select id="language">
-            <option value="ru" selected>Русский</option>
-            <option value="en">English</option>
-            <option value="uk">Українська</option>
-            <option value="ar">العربية</option>
-        </select>
-    </div>
+    <select id="languageSelector">
+        <option value="ru">Русский</option>
+        <option value="en">English</option>
+        <option value="ar">العربية</option>
+        <option value="ua">Українська</option>
+    </select>
+
     <div class="container">
-        <h1>Универсальный Конвертер Валют</h1>
+        <h1 id="title">Универсальный Конвертер Валют</h1>
         <input type="number" id="amount" placeholder="Введите сумму" />
         <select id="fromCurrency">
             <option value="RUB" selected>🇷🇺 Российские рубли (RUB)</option>
@@ -120,9 +109,7 @@
             <option value="RUB">🇷🇺 Российские рубли (RUB)</option>
             <option value="GBP">🇬🇧 Британские фунты (GBP)</option>
         </select>
-        <input type="number" id="commission" placeholder="Процент комиссии" value="0"
-            onfocus="if (this.value == '0') { this.value = ''; }"
-            onblur="if (this.value == '') { this.value = '0'; }" />
+        <input type="number" id="commission" placeholder="Процент комиссии" value="0" />
         <button id="convertButton">Рассчитать</button>
         <div id="result" style="margin-top: 15px;"></div>
         <div class="footer">
@@ -133,59 +120,37 @@
             Второй телефон: <a href="tel:+971527429306">+971 52 742 93 06</a>
         </div>
     </div>
+
     <script>
         const apiUrl = "https://v6.exchangerate-api.com/v6/020c6e77213ba847f6eaaf32/latest/USD";
 
         const translations = {
-            ru: {
-                title: "Универсальный Конвертер Валют",
-                amountPlaceholder: "Введите сумму",
-                commissionPlaceholder: "Процент комиссии",
-                convertButton: "Рассчитать",
-            },
-            en: {
-                title: "Universal Currency Converter",
-                amountPlaceholder: "Enter amount",
-                commissionPlaceholder: "Commission percentage",
-                convertButton: "Convert",
-            },
-            uk: {
-                title: "Універсальний Конвертер Валют",
-                amountPlaceholder: "Введіть суму",
-                commissionPlaceholder: "Відсоток комісії",
-                convertButton: "Розрахувати",
-            },
-            ar: {
-                title: "محول العملات العالمي",
-                amountPlaceholder: "أدخل المبلغ",
-                commissionPlaceholder: "نسبة العمولة",
-                convertButton: "تحويل",
-            }
+            ru: { title: "Универсальный Конвертер Валют", calculate: "Рассчитать", million: "млн", thousand: "тыс" },
+            en: { title: "Universal Currency Converter", calculate: "Calculate", million: "M", thousand: "K" },
+            ar: { title: "محول العملات العالمي", calculate: "احسب", million: "مليون", thousand: "ألف" },
+            ua: { title: "Універсальний Конвертер Валют", calculate: "Розрахувати", million: "млн", thousand: "тис" }
         };
 
-        document.getElementById("language").addEventListener("change", function () {
-            const selectedLanguage = document.getElementById("language").value;
-            const translation = translations[selectedLanguage];
+        function translateUI(language) {
+            document.getElementById("title").textContent = translations[language].title;
+            document.getElementById("convertButton").textContent = translations[language].calculate;
+        }
 
-            if (translation) {
-                document.querySelector("h1").textContent = translation.title;
-                document.getElementById("amount").placeholder = translation.amountPlaceholder;
-                document.getElementById("commission").placeholder = translation.commissionPlaceholder;
-                document.getElementById("convertButton").textContent = translation.convertButton;
+        function formatNumber(value, language) {
+            const lang = translations[language];
+            if (value >= 1_000_000) {
+                return (value / 1_000_000).toFixed(2) + " " + lang.million;
+            } else if (value >= 1_000) {
+                return (value / 1_000).toFixed(2) + " " + lang.thousand;
+            } else {
+                return value.toFixed(2);
             }
-        });
-
-        document.getElementById("convertButton").addEventListener("click", convertCurrency);
+        }
 
         async function fetchRates() {
-            try {
-                const response = await fetch(apiUrl);
-                const data = await response.json();
-                return data.conversion_rates;
-            } catch (error) {
-                document.getElementById("result").textContent = "Ошибка загрузки курсов валют.";
-                throw new Error("Ошибка API");
-            }
+            const response = await fetch(apiUrl);
+            const data = await response.json();
+            return data.conversion_rates;
         }
 
         async function convertCurrency() {
@@ -193,6 +158,7 @@
             const fromCurrency = document.getElementById("fromCurrency").value;
             const toCurrency = document.getElementById("toCurrency").value;
             const commissionRate = parseFloat(document.getElementById("commission").value) || 0;
+            const selectedLanguage = document.getElementById("languageSelector").value;
 
             if (isNaN(amount) || amount <= 0) {
                 document.getElementById("result").textContent = "Введите корректную сумму.";
@@ -207,14 +173,21 @@
                 const totalAmount = convertedAmount - commission;
 
                 document.getElementById("result").innerHTML = `
-                    Изначальная сумма: ${amount.toFixed(2)} ${fromCurrency}<br>
-                    Конвертированная сумма: ${convertedAmount.toFixed(2)} ${toCurrency}<br>
-                    Итоговая сумма: ${totalAmount.toFixed(2)} ${toCurrency}
+                    ${translations[selectedLanguage].calculate}: ${formatNumber(amount, selectedLanguage)} ${fromCurrency}<br>
+                    Конвертированная сумма: ${formatNumber(convertedAmount, selectedLanguage)} ${toCurrency}<br>
+                    Итоговая сумма: ${formatNumber(totalAmount, selectedLanguage)} ${toCurrency}
                 `;
             } catch (error) {
-                console.error(error);
+                document.getElementById("result").textContent = "Ошибка загрузки курсов валют.";
             }
         }
+
+        document.getElementById("languageSelector").addEventListener("change", function () {
+            const selectedLanguage = this.value;
+            translateUI(selectedLanguage);
+        });
+
+        document.getElementById("convertButton").addEventListener("click", convertCurrency);
     </script>
 </body>
 </html>
