@@ -156,6 +156,18 @@
                     GBP: "🇬🇧 Британські фунти (GBP)",
                     AED: "🇦🇪 Дірхами ОАЕ (AED)"
                 }
+            },
+            ar: {
+                title: "محول العملات العالمي",
+                calculate: "احسب",
+                footer: "تم التطوير بواسطة ❤️ Ihor Dubai Real Estate<br>تواصل معي:<br>Instagram: <a href='https://instagram.com/ihorestatelife' target='_blank'>@ihorestatelife</a><br>الهاتف: <a href='tel:+971527429306'>+971 52 742 93 06</a>",
+                currencies: {
+                    RUB: "🇷🇺 روبل روسي (RUB)",
+                    USD: "🇺🇸 دولار أمريكي (USD)",
+                    UAH: "🇺🇦 هريفنيا أوكرانية (UAH)",
+                    GBP: "🇬🇧 جنيه إسترليني (GBP)",
+                    AED: "🇦🇪 دراهم إماراتية (AED)"
+                }
             }
         };
 
@@ -205,11 +217,11 @@
                 const convertedAmount = (amount / rates[fromCurrency]) * rates[toCurrency];
                 document.getElementById("result").innerText = `Converted Amount: ${convertedAmount.toFixed(2)} ${toCurrency}`;
             } else {
-                document.getElementById("result").innerText = "Ошибка при конвертации.";
+                document.getElementById("result").innerText = "Ошибка конвертации валют.";
             }
         });
 
-        // Set default language
+        // Initialize default UI
         translateUI("ru");
     </script>
 </body>
