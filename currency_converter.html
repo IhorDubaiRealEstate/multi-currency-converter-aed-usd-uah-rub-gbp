@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Универсальный конвертер валют</title>
+</head>
+<body>
+    <h1>Универсальный конвертер валют</h1>
+    <label for="amount">Введите сумму:</label>
+    <input type="number" id="amount" placeholder="Введите сумму" required>
+    
+    <label for="fromCurrency">Из валюты:</label>
+    <select id="fromCurrency">
+        <option value="USD">Доллары США (USD)</option>
+        <option value="UAH">Украинские гривны (UAH)</option>
+        <option value="RUB">Российские рубли (RUB)</option>
+        <option value="GBP">Британские фунты (GBP)</option>
+        <option value="AED">Дирхамы ОАЭ (AED)</option>
+    </select>
+    
+    <label for="toCurrency">В валюту:</label>
+    <select id="toCurrency">
+        <option value="USD">Доллары США (USD)</option>
+        <option value="UAH">Украинские гривны (UAH)</option>
+        <option value="RUB">Российские рубли (RUB)</option>
+        <option value="GBP">Британские фунты (GBP)</option>
+        <option value="AED">Дирхамы ОАЭ (AED)</option>
+    </select>
+
+    <label for="commission">Процент комиссии:</label>
+    <input type="number" id="commission" placeholder="Введите % комиссии" value="15" disabled>
+    <label for="includeCommission">
+        <input type="checkbox" id="includeCommission" checked onclick="toggleCommission()"> Включить комиссию
+    </label>
+
+    <button onclick="calculate()">Рассчитать</button>
+    <h3>Результаты:</h3>
+    <p id="result"></p>
+
+    <script>
+        // Функция форматирования чисел с разделением разрядов
+        function formatNumber(number) {
+            return number.toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }
+
+        // Переключение ввода комиссии
+        function toggleCommission() {
+            const commissionInput = document.getElementById("commission");
+            commissionInput.disabled = !document.getElementById("includeCommission").checked;
+            if (!commissionInput.disabled) {
+                commissionInput.value = "15"; // Возвращаем значение по умолчанию
+            } else {
+                commissionInput.value = "0"; // Устанавливаем комиссию 0
+            }
+        }
+
+        async function getExchangeRate(base, target) {
+            const response = await fetch(`https://api.exchangerate-api.com/v4/latest/${base}`);
+            const data = await response.json();
+            return data.rates[target];
+        }
+
+        async function calculate() {
+            const amount = parseFloat(document.getElementById('amount').value);
+            const fromCurrency = document.getElementById('fromCurrency').value;
+            const toCurrency = document.getElementById('toCurrency').value;
+            const commissionRate = parseFloat(document.getElementById('commission').value) / 100;
+
+            if (isNaN(amount) || amount <= 0) {
+                document.getElementById('result').innerText = "Пожалуйста, введите корректную сумму.";
+                return;
+            }
+
+            if (fromCurrency === toCurrency) {
+                document.getElementById('result').innerText = "Выберите разные валюты для конвертации.";
+                return;
+            }
+
+            const exchangeRate = await getExchangeRate(fromCurrency, toCurrency);
+            const convertedAmount = amount * exchangeRate;
+            const commission = convertedAmount * commissionRate;
+            const finalAmount = convertedAmount - commission;
+
+            document.getElementById('result').innerHTML = `
+                <strong>Изначальная сумма:</strong> ${formatNumber(amount)} ${fromCurrency}<br>
+                <strong>Курс (${fromCurrency} → ${toCurrency}):</strong> ${formatNumber(exchangeRate)}<br>
+                <strong>Конвертированная сумма:</strong> ${formatNumber(convertedAmount)} ${toCurrency}<br>
+                <strong>Комиссия (${(commissionRate * 100).toFixed(2)}%):</strong> ${formatNumber(commission)} ${toCurrency}<br>
+                <strong>Итоговая сумма после комиссии:</strong> ${formatNumber(finalAmount)} ${toCurrency}
+            `;
+        }
+    </script>
+</body>
+</html>
