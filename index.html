@@ -123,7 +123,7 @@
         <input type="number" id="commission" placeholder="Процент комиссии" value="0" />
         <button id="convertButton">Рассчитать</button>
         <div id="result" style="margin-top: 15px;"></div>
-        <div class="footer">
+        <div class="footer" id="footer">
             Разработано с ❤️ Ihor Dubai Real Estate<br>
             Свяжитесь со мной:<br>
             Instagram: <a href="https://instagram.com/ihorestatelife" target="_blank">@ihorestatelife</a><br>
@@ -142,6 +142,11 @@
                 totalAmount: "Итоговая сумма",
                 enterAmount: "Введите сумму",
                 commissionPlaceholder: "Процент комиссии",
+                footer: `Разработано с ❤️ Ihor Dubai Real Estate<br>
+                        Свяжитесь со мной:<br>
+                        Instagram: <a href="https://instagram.com/ihorestatelife" target="_blank">@ihorestatelife</a><br>
+                        Телефон: <a href="tel:+971543031920">+971 54 303 19 20</a><br>
+                        Второй телефон: <a href="tel:+971527429306">+971 52 742 93 06</a>`,
                 currencies: {
                     RUB: "🇷🇺 Российские рубли (RUB)",
                     USD: "🇺🇸 Доллары США (USD)",
@@ -158,6 +163,11 @@
                 totalAmount: "Total Amount",
                 enterAmount: "Enter Amount",
                 commissionPlaceholder: "Commission Percentage",
+                footer: `Developed with ❤️ Ihor Dubai Real Estate<br>
+                        Contact me:<br>
+                        Instagram: <a href="https://instagram.com/ihorestatelife" target="_blank">@ihorestatelife</a><br>
+                        Phone: <a href="tel:+971543031920">+971 54 303 19 20</a><br>
+                        Second phone: <a href="tel:+971527429306">+971 52 742 93 06</a>`,
                 currencies: {
                     RUB: "🇷🇺 Russian Rubles (RUB)",
                     USD: "🇺🇸 US Dollars (USD)",
@@ -174,6 +184,11 @@
                 totalAmount: "المبلغ الإجمالي",
                 enterAmount: "أدخل المبلغ",
                 commissionPlaceholder: "نسبة العمولة",
+                footer: `تم التطوير بواسطة ❤️ Ihor Dubai Real Estate<br>
+                        تواصل معي:<br>
+                        Instagram: <a href="https://instagram.com/ihorestatelife" target="_blank">@ihorestatelife</a><br>
+                        الهاتف: <a href="tel:+971543031920">+971 54 303 19 20</a><br>
+                        الهاتف الثاني: <a href="tel:+971527429306">+971 52 742 93 06</a>`,
                 currencies: {
                     RUB: "🇷🇺 الروبل الروسي (RUB)",
                     USD: "🇺🇸 الدولار الأمريكي (USD)",
@@ -190,6 +205,11 @@
                 totalAmount: "Загальна сума",
                 enterAmount: "Введіть суму",
                 commissionPlaceholder: "Відсоток комісії",
+                footer: `Розроблено з ❤️ Ihor Dubai Real Estate<br>
+                        Зв'яжіться зі мною:<br>
+                        Instagram: <a href="https://instagram.com/ihorestatelife" target="_blank">@ihorestatelife</a><br>
+                        Телефон: <a href="tel:+971543031920">+971 54 303 19 20</a><br>
+                        Другий телефон: <a href="tel:+971527429306">+971 52 742 93 06</a>`,
                 currencies: {
                     RUB: "🇷🇺 Російські рублі (RUB)",
                     USD: "🇺🇸 Долари США (USD)",
@@ -201,21 +221,18 @@
         };
 
         function translateUI(language) {
-            const t = translations[language];
-            document.getElementById("title").textContent = t.title;
-            document.getElementById("convertButton").textContent = t.calculate;
-            document.getElementById("amount").placeholder = t.enterAmount;
-            document.getElementById("commission").placeholder = t.commissionPlaceholder;
+            document.getElementById("title").textContent = translations[language].title;
+            document.getElementById("convertButton").textContent = translations[language].calculate;
+            document.getElementById("amount").placeholder = translations[language].enterAmount;
+            document.getElementById("commission").placeholder = translations[language].commissionPlaceholder;
+            document.getElementById("footer").innerHTML = translations[language].footer;
 
-            const fromCurrency = document.getElementById("fromCurrency");
-            const toCurrency = document.getElementById("toCurrency");
+            const fromCurrencySelect = document.getElementById("fromCurrency");
+            const toCurrencySelect = document.getElementById("toCurrency");
 
-            Array.from(fromCurrency.options).forEach(option => {
-                option.textContent = t.currencies[option.value];
-            });
-
-            Array.from(toCurrency.options).forEach(option => {
-                option.textContent = t.currencies[option.value];
+            Object.keys(translations[language].currencies).forEach((key, index) => {
+                fromCurrencySelect.options[index].textContent = translations[language].currencies[key];
+                toCurrencySelect.options[index].textContent = translations[language].currencies[key];
             });
         }
 
