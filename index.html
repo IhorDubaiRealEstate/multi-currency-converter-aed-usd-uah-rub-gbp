@@ -117,4 +117,70 @@
                 </option>
                 <option value="RUB" class="flag-option">
                     <img src="https://flagcdn.com/ru.svg" alt="Russia Flag"> Российские рубли (RUB)
-                </opti
+                </option>
+                <option value="GBP" class="flag-option">
+                    <img src="https://flagcdn.com/gb.svg" alt="UK Flag"> Британские фунты (GBP)
+                </option>
+                <option value="AED" class="flag-option">
+                    <img src="https://flagcdn.com/ae.svg" alt="UAE Flag"> Дирхамы ОАЭ (AED)
+                </option>
+            </select>
+            
+            <label for="toCurrency">В валюту:</label>
+            <select id="toCurrency">
+                <option value="USD" class="flag-option">
+                    <img src="https://flagcdn.com/us.svg" alt="US Flag"> Доллары США (USD)
+                </option>
+                <option value="UAH" class="flag-option">
+                    <img src="https://flagcdn.com/ua.svg" alt="Ukraine Flag"> Украинские гривны (UAH)
+                </option>
+                <option value="RUB" class="flag-option">
+                    <img src="https://flagcdn.com/ru.svg" alt="Russia Flag"> Российские рубли (RUB)
+                </option>
+                <option value="GBP" class="flag-option">
+                    <img src="https://flagcdn.com/gb.svg" alt="UK Flag"> Британские фунты (GBP)
+                </option>
+                <option value="AED" class="flag-option">
+                    <img src="https://flagcdn.com/ae.svg" alt="UAE Flag"> Дирхамы ОАЭ (AED)
+                </option>
+            </select>
+
+            <label for="commission">Процент комиссии:</label>
+            <input type="number" id="commission" placeholder="Введите % комиссии" value="0" disabled>
+            <label>
+                <input type="checkbox" id="includeCommission" onclick="toggleCommission()"> Включить комиссию
+            </label>
+
+            <button type="submit">Рассчитать</button>
+        </form>
+        <div id="result"></div>
+    </div>
+    <footer>
+        Разработано с ❤️ <a href="https://github.com/ihordubairealestate" target="_blank">Ihor Dubai Real Estate</a>
+    </footer>
+    <script>
+        function toggleCommission() {
+            const commissionInput = document.getElementById("commission");
+            commissionInput.disabled = !document.getElementById("includeCommission").checked;
+            if (!commissionInput.disabled) {
+                commissionInput.value = "15";
+            } else {
+                commissionInput.value = "0";
+            }
+        }
+
+        async function calculate() {
+            const amount = parseFloat(document.getElementById('amount').value);
+            const fromCurrency = document.getElementById('fromCurrency').value;
+            const toCurrency = document.getElementById('toCurrency').value;
+
+            if (isNaN(amount) || amount <= 0) {
+                document.getElementById('result').innerText = "Введите корректную сумму.";
+                return;
+            }
+
+            document.getElementById('result').innerText = `Конвертация ${amount} ${fromCurrency} в ${toCurrency}`;
+        }
+    </script>
+</body>
+</html>
