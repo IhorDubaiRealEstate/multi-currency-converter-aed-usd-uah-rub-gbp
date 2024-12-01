@@ -76,11 +76,24 @@
         .footer a:hover {
             text-decoration: underline;
         }
+
+        .language-selector {
+            margin-bottom: 15px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Универсальный Конвертер Валют</h1>
+        <div class="language-selector">
+            <label for="language">Язык:</label>
+            <select id="language">
+                <option value="ru" selected>Русский</option>
+                <option value="en">English</option>
+                <option value="uk">Українська</option>
+                <option value="ar">العربية</option>
+            </select>
+        </div>
         <input type="number" id="amount" placeholder="Введите сумму" />
         <select id="fromCurrency">
             <option value="RUB" selected>🇷🇺 Российские рубли (RUB)</option>
@@ -117,40 +130,12 @@
             }
         });
 
-        async function convertCurrency() {
-            const amount = parseFloat(document.getElementById("amount").value);
-            const fromCurrency = document.getElementById("fromCurrency").value;
-            const toCurrency = document.getElementById("toCurrency").value;
-            const commissionRate = parseFloat(document.getElementById("commission").value) || 0;
-
-            if (isNaN(amount) || amount <= 0) {
-                document.getElementById("result").textContent = "Введите корректную сумму.";
-                return;
-            }
-
-            try {
-                const response = await fetch(apiUrl);
-                const data = await response.json();
-                const rates = data.conversion_rates;
-
-                if (rates[fromCurrency] && rates[toCurrency]) {
-                    const baseAmount = amount / rates[fromCurrency];
-                    const convertedAmount = baseAmount * rates[toCurrency];
-                    const commission = (commissionRate / 100) * convertedAmount;
-                    const totalAmount = convertedAmount - commission;
-
-                    document.getElementById("result").innerHTML = `
-                        Изначальная сумма: ${amount.toFixed(2)} ${fromCurrency}<br>
-                        Конвертированная сумма: ${convertedAmount.toFixed(2)} ${toCurrency}<br>
-                        Итоговая сумма: ${totalAmount.toFixed(2)} ${toCurrency}
-                    `;
-                } else {
-                    document.getElementById("result").textContent = "Ошибка конвертации валют.";
-                }
-            } catch (error) {
-                document.getElementById("result").textContent = "Ошибка загрузки курсов валют.";
-            }
-        }
-    </script>
-</body>
-</html>
+        document.getElementById("language").addEventListener("change", function () {
+            const selectedLanguage = document.getElementById("language").value;
+            if (selectedLanguage === "en") {
+                document.querySelector("h1").textContent = "Universal Currency Converter";
+                document.getElementById("amount").placeholder = "Enter amount";
+                document.getElementById("commission").placeholder = "Commission percentage";
+                document.getElementById("convertButton").textContent = "Convert";
+            } else if (selectedLanguage === "uk") {
+                document.queryS
