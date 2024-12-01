@@ -1,23 +1,156 @@
-<footer>
-    <div style="text-align: center; margin-top: 20px;">
-        Разработано с ❤️ <a href="https://github.com/ihordubairealestate" target="_blank">Ihor Dubai Real Estate</a><br>
-        <div class="contact" style="margin-top: 10px;">
-            Свяжитесь со мной: <br>
-            Instagram: <a href="https://www.instagram.com/ihorestatelife" target="_blank">@ihorestatelife</a><br>
-            Телефон: <a href="tel:+971543031920">+971 543 031 920</a><br>
-            Второй телефон: <a href="tel:+971527429306">+971 527 429 306</a>
-        </div>
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Универсальный конвертер валют</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #2b2b2b;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            flex-direction: column;
+        }
+        .container {
+            background-color: #3b3b3b;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 400px;
+        }
+        h1 {
+            color: #00ff7f;
+            text-align: center;
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+            font-weight: bold;
+        }
+        input, select, button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #00ff7f;
+            border-radius: 5px;
+            background-color: #2b2b2b;
+            color: #fff;
+            font-size: 16px;
+        }
+        button {
+            background-color: #00ff7f;
+            color: #2b2b2b;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #00cc66;
+        }
+        footer {
+            background-color: #2b2b2b;
+            padding: 20px;
+            text-align: center;
+            color: #fff;
+            margin-top: 20px;
+        }
+        footer a {
+            color: #00ff7f;
+            text-decoration: none;
+        }
+        footer a:hover {
+            text-decoration: underline;
+        }
+        footer p {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Универсальный конвертер валют</h1>
+        <label for="amount">Введите сумму:</label>
+        <input type="number" id="amount" placeholder="Введите сумму">
+        
+        <label for="fromCurrency">Из валюты:</label>
+        <select id="fromCurrency">
+            <option value="USD">Доллары США (USD)</option>
+            <option value="UAH">Украинские гривны (UAH)</option>
+            <option value="RUB">Российские рубли (RUB)</option>
+            <option value="GBP">Британские фунты (GBP)</option>
+            <option value="AED">Дирхамы ОАЭ (AED)</option>
+        </select>
+        
+        <label for="toCurrency">В валюту:</label>
+        <select id="toCurrency">
+            <option value="USD">Доллары США (USD)</option>
+            <option value="UAH">Украинские гривны (UAH)</option>
+            <option value="RUB">Российские рубли (RUB)</option>
+            <option value="GBP">Британские фунты (GBP)</option>
+            <option value="AED">Дирхамы ОАЭ (AED)</option>
+        </select>
+        
+        <label for="commission">Процент комиссии:</label>
+        <input type="number" id="commission" placeholder="Введите процент комиссии" value="0">
+        
+        <label>
+            <input type="checkbox" id="includeCommission"> Включить комиссию
+        </label>
+        
+        <button id="convertButton">Рассчитать</button>
+        
+        <div id="results"></div>
     </div>
-</footer>
-<footer>
-    <div style="text-align: center; margin-top: 20px;">
-        <p>Разработано с ❤️</p>
-        <p><a href="https://github.com/ihordubairealestate" target="_blank">Ihor Dubai Real Estate</a></p>
-        <div class="contact" style="margin-top: 10px;">
+    
+    <footer>
+        <p>Разработано с ❤️ <a href="https://github.com/ihordubairealestate" target="_blank">Ihor Dubai Real Estate</a></p>
+        <div class="contact">
             <p>Свяжитесь со мной:</p>
             <p>Instagram: <a href="https://www.instagram.com/ihorestatelife" target="_blank">@ihorestatelife</a></p>
             <p>Телефон: <a href="tel:+971543031920">+971 543 031 920</a></p>
             <p>Второй телефон: <a href="tel:+971527429306">+971 527 429 306</a></p>
         </div>
-    </div>
-</footer>
+    </footer>
+
+    <script>
+        document.getElementById("convertButton").addEventListener("click", function () {
+            const amount = parseFloat(document.getElementById("amount").value);
+            const fromCurrency = document.getElementById("fromCurrency").value;
+            const toCurrency = document.getElementById("toCurrency").value;
+            const commissionPercent = parseFloat(document.getElementById("commission").value) || 0;
+            const includeCommission = document.getElementById("includeCommission").checked;
+
+            if (isNaN(amount) || amount <= 0) {
+                alert("Введите корректную сумму.");
+                return;
+            }
+
+            const rates = {
+                USD: 1,
+                UAH: 36.6,
+                RUB: 100,
+                GBP: 0.73,
+                AED: 3.67,
+            };
+
+            const convertedAmount = (amount / rates[fromCurrency]) * rates[toCurrency];
+            const commission = includeCommission ? (convertedAmount * commissionPercent) / 100 : 0;
+            const finalAmount = convertedAmount - commission;
+
+            const resultsDiv = document.getElementById("results");
+            resultsDiv.innerHTML = `
+                <p>Изначальная сумма: ${amount.toFixed(2)} ${fromCurrency}</p>
+                <p>Конвертированная сумма: ${convertedAmount.toFixed(2)} ${toCurrency}</p>
+                ${includeCommission ? `<p>Комиссия (${commissionPercent.toFixed(2)}%): ${commission.toFixed(2)} ${toCurrency}</p>` : ""}
+                <p>Итоговая сумма: ${finalAmount.toFixed(2)} ${toCurrency}</p>
+            `;
+        });
+    </script>
+</body>
+</html>
