@@ -141,9 +141,7 @@
                 convertedAmount: "Конвертированная сумма",
                 totalAmount: "Итоговая сумма",
                 enterAmount: "Введите сумму",
-                commissionPlaceholder: "Процент комиссии",
-                million: "млн",
-                thousand: "тыс"
+                commissionPlaceholder: "Процент комиссии"
             },
             en: {
                 title: "Universal Currency Converter",
@@ -152,9 +150,7 @@
                 convertedAmount: "Converted Amount",
                 totalAmount: "Total Amount",
                 enterAmount: "Enter Amount",
-                commissionPlaceholder: "Commission Percentage",
-                million: "M",
-                thousand: "K"
+                commissionPlaceholder: "Commission Percentage"
             },
             ar: {
                 title: "محول العملات العالمي",
@@ -163,9 +159,7 @@
                 convertedAmount: "المبلغ المحول",
                 totalAmount: "المبلغ الإجمالي",
                 enterAmount: "أدخل المبلغ",
-                commissionPlaceholder: "نسبة العمولة",
-                million: "مليون",
-                thousand: "ألف"
+                commissionPlaceholder: "نسبة العمولة"
             },
             ua: {
                 title: "Універсальний Конвертер Валют",
@@ -174,11 +168,42 @@
                 convertedAmount: "Конвертована сума",
                 totalAmount: "Загальна сума",
                 enterAmount: "Введіть суму",
-                commissionPlaceholder: "Відсоток комісії",
-                million: "млн",
-                thousand: "тис"
+                commissionPlaceholder: "Відсоток комісії"
             }
         };
+
+        async function fetchRates() {
+            const response = await fetch("https://v6.exchangerate-api.com/v6/020c6e77213ba847f6eaaf32/latest/USD");
+            if (!response.ok) throw new Error("Failed to fetch rates.");
+            return (await response.json()).conversion_rates;
+        }
+
+        async function convertCurrency() {
+            const amount = parseFloat(document.getElementById("amount").value);
+            const fromCurrency = document.getElementById("fromCurrency").value;
+            const toCurrency = document.getElementById("toCurrency").value;
+            const commissionRate = parseFloat(document.getElementById("commission").value) || 0;
+
+            if (isNaN(amount) || amount <= 0) {
+                document.getElementById("result").textContent = "Введите корректную сумму.";
+                return;
+            }
+
+            try {
+                const rates = await fetchRates();
+                const convertedAmount = (amount / rates[fromCurrency]) * rates[toCurrency];
+                const commission = (commissionRate / 100) * convertedAmount;
+                const finalAmount = convertedAmount - commission;
+
+                document.getElementById("result").innerHTML = `
+                    Изначальная сумма: ${amount.toFixed(2)} ${fromCurrency}<br>
+                    Конвертированная сумма: ${convertedAmount.toFixed(2)} ${toCurrency}<br>
+                    Итоговая сумма: ${finalAmount.toFixed(2)} ${toCurrency}
+                `;
+            } catch (error) {
+                document.getElementById("result").textContent = "Ошибка загрузки данных валют.";
+            }
+        }
 
         function translateUI(language) {
             const translation = translations[language];
@@ -188,56 +213,11 @@
             document.getElementById("commission").placeholder = translation.commissionPlaceholder;
         }
 
-        async function fetchRates() {
-            try {
-                const response = await fetch("https://v6.exchangerate-api.com/v6/020c6e77213ba847f6eaaf32/latest/USD");
-                if (!response.ok) throw new Error("Failed to fetch rates");
-                return (await response.json()).conversion_rates;
-            } catch (err) {
-                console.error(err);
-                return null;
-            }
-        }
-
-        async function convertCurrency() {
-            const amount = parseFloat(document.getElementById("amount").value);
-            const fromCurrency = document.getElementById("fromCurrency").value;
-            const toCurrency = document.getElementById("toCurrency").value;
-            const commissionRate = parseFloat(document.getElementById("commission").value) || 0;
-            const selectedLanguage = document.getElementById("languageSelector").value;
-
-            if (isNaN(amount) || amount <= 0) {
-                document.getElementById("result").textContent = translations[selectedLanguage].enterAmount;
-                return;
-            }
-
-            const rates = await fetchRates();
-            if (!rates) {
-                document.getElementById("result").textContent = "Error fetching exchange rates.";
-                return;
-            }
-
-            const baseAmount = amount / rates[fromCurrency];
-            const convertedAmount = baseAmount * rates[toCurrency];
-            const commission = (commissionRate / 100) * convertedAmount;
-            const totalAmount = convertedAmount - commission;
-
-            const formattedOriginal = formatNumber(amount, selectedLanguage);
-            const formattedConverted = formatNumber(convertedAmount, selectedLanguage);
-            const formattedTotal = formatNumber(totalAmount, selectedLanguage);
-
-            document.getElementById("result").innerHTML = `
-                ${translations[selectedLanguage].originalAmount}: ${formattedOriginal} ${fromCurrency}<br>
-                ${translations[selectedLanguage].convertedAmount}: ${formattedConverted} ${toCurrency}<br>
-                ${translations[selectedLanguage].totalAmount}: ${formattedTotal} ${toCurrency}
-            `;
-        }
+        document.getElementById("languageSelector").addEventListener("change", (e) => {
+            translateUI(e.target.value);
+        });
 
         document.getElementById("convertButton").addEventListener("click", convertCurrency);
-        document.getElementById("languageSelector").addEventListener("change", (event) => {
-            const selectedLanguage = event.target.value;
-            translateUI(selectedLanguage);
-        });
     </script>
 </body>
 </html>
