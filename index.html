@@ -136,37 +136,36 @@
     <script>
         const apiUrl = "https://v6.exchangerate-api.com/v6/020c6e77213ba847f6eaaf32/latest/USD";
 
-        document.getElementById("convertButton").addEventListener("click", convertCurrency);
-        document.getElementById("amount").addEventListener("keydown", function (e) {
-            if (e.key === "Enter") {
-                convertCurrency();
-            }
-        });
+        async function fetchRatesOncePerDay() {
+            const storedData = localStorage.getItem("exchangeRates");
+            const currentDate = new Date().toISOString().split("T")[0]; // Текущая дата
 
-        document.getElementById("language").addEventListener("change", function () {
-            const selectedLanguage = document.getElementById("language").value;
-            if (selectedLanguage === "en") {
-                document.querySelector("h1").textContent = "Universal Currency Converter";
-                document.getElementById("amount").placeholder = "Enter amount";
-                document.getElementById("commission").placeholder = "Commission percentage";
-                document.getElementById("convertButton").textContent = "Convert";
-            } else if (selectedLanguage === "uk") {
-                document.querySelector("h1").textContent = "Універсальний Конвертер Валют";
-                document.getElementById("amount").placeholder = "Введіть суму";
-                document.getElementById("commission").placeholder = "Відсоток комісії";
-                document.getElementById("convertButton").textContent = "Розрахувати";
-            } else if (selectedLanguage === "ar") {
-                document.querySelector("h1").textContent = "محول العملات العالمي";
-                document.getElementById("amount").placeholder = "أدخل المبلغ";
-                document.getElementById("commission").placeholder = "نسبة العمولة";
-                document.getElementById("convertButton").textContent = "تحويل";
-            } else {
-                document.querySelector("h1").textContent = "Универсальный Конвертер Валют";
-                document.getElementById("amount").placeholder = "Введите сумму";
-                document.getElementById("commission").placeholder = "Процент комиссии";
-                document.getElementById("convertButton").textContent = "Рассчитать";
+            if (storedData) {
+                const parsedData = JSON.parse(storedData);
+                if (parsedData.date === currentDate) {
+                    console.log("Используются сохраненные курсы валют.");
+                    return parsedData.rates;
+                }
             }
-        });
+
+            try {
+                const response = await fetch(apiUrl);
+                const data = await response.json();
+                const rates = data.conversion_rates;
+
+                // Сохраняем курсы валют и дату в localStorage
+                localStorage.setItem(
+                    "exchangeRates",
+                    JSON.stringify({ date: currentDate, rates: rates })
+                );
+
+                console.log("Курсы валют обновлены.");
+                return rates;
+            } catch (error) {
+                console.error("Ошибка при получении данных о курсах валют:", error);
+                throw new Error("Не удалось загрузить курсы валют.");
+            }
+        }
 
         async function convertCurrency() {
             const amount = parseFloat(document.getElementById("amount").value);
@@ -180,9 +179,7 @@
             }
 
             try {
-                const response = await fetch(apiUrl);
-                const data = await response.json();
-                const rates = data.conversion_rates;
+                const rates = await fetchRatesOncePerDay();
 
                 if (rates[fromCurrency] && rates[toCurrency]) {
                     const baseAmount = amount / rates[fromCurrency];
@@ -202,6 +199,13 @@
                 document.getElementById("result").textContent = "Ошибка загрузки курсов валют.";
             }
         }
+
+        document.getElementById("convertButton").addEventListener("click", convertCurrency);
+        document.getElementById("amount").addEventListener("keydown", function (e) {
+            if (e.key === "Enter") {
+                convertCurrency();
+            }
+        });
     </script>
 </body>
 </html>
