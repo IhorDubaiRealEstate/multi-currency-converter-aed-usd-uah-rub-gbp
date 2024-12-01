@@ -124,10 +124,10 @@
         <button id="convertButton">Рассчитать</button>
         <div id="result" style="margin-top: 15px;"></div>
         <div class="footer">
-            Разработано с ❤️ Ihor Dubai Real Estate<br>
-            Свяжитесь со мной:<br>
+            <span id="footerText">Разработано с ❤️ Ihor Dubai Real Estate<br>
+            Свяжитесь со мной:</span><br>
             Instagram: <a href="https://instagram.com/ihorestatelife" target="_blank">@ihorestatelife</a><br>
-            Телефон: +971 52 742 93 06
+            <span id="phoneText">Телефон: +971 52 742 93 06</span>
         </div>
     </div>
 
@@ -140,6 +140,8 @@
                 convertedAmount: "Конвертированная сумма",
                 totalAmount: "Итоговая сумма",
                 footer: "Разработано с ❤️ Ihor Dubai Real Estate",
+                contact: "Свяжитесь со мной:",
+                phone: "Телефон:",
                 currencies: {
                     RUB: "🇷🇺 Российские рубли (RUB)",
                     USD: "🇺🇸 Доллары США (USD)",
@@ -148,13 +150,34 @@
                     AED: "🇦🇪 Дирхамы ОАЭ (AED)"
                 }
             },
-            ua: {
-                currencies: {
-                    AED: "🇦🇪 Дірхами ОАЕ",
-                }
-            }
+            // Добавьте EN, UA, AR аналогично...
         };
-        const translateCurrencies = () => {/* Логика обновления списка */};
+
+        const updateLanguage = () => {
+            const selectedLang = document.getElementById("languageSelector").value;
+            const langData = translations[selectedLang];
+            document.getElementById("title").textContent = langData.title;
+            document.getElementById("convertButton").textContent = langData.calculate;
+            document.getElementById("footerText").textContent = `${langData.footer} ${langData.contact}`;
+            document.getElementById("phoneText").textContent = langData.phone;
+            const fromSelect = document.getElementById("fromCurrency");
+            const toSelect = document.getElementById("toCurrency");
+            [...fromSelect.options].forEach((option) => {
+                option.textContent = langData.currencies[option.value];
+            });
+            [...toSelect.options].forEach((option) => {
+                option.textContent = langData.currencies[option.value];
+            });
+        };
+
+        async function convertCurrency() {
+            // Логика пересчета.
+        }
+
+        document.getElementById("languageSelector").addEventListener("change", updateLanguage);
+        document.getElementById("convertButton").addEventListener("click", convertCurrency);
+
+        updateLanguage(); // Установить язык по умолчанию.
     </script>
 </body>
 </html>
